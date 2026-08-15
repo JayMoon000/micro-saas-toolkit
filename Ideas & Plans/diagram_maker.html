@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3초 초간편 다이어그램/그래프 생성기 - StarSign Toolkit</title>
+    <meta name="description" content="복잡한 설치 없이 텍스트 입력만으로 고화질 플로우차트, 마인드맵, 다이어그램을 즉시 생성하고 PNG/SVG로 다운로드합니다.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Mermaid.js (100% Client-Side 연산) -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="border-b border-slate-200 bg-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="text-slate-400 hover:text-slate-700 transition mr-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> 허브로
+                </a>
+                <span class="text-xl">📊</span>
+                <h1 class="text-lg font-bold text-slate-900">다이어그램 & 플로우차트 생성기</h1>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-emerald-50 text-emerald-600 border border-emerald-200">
+                100% 브라우저 실시간 렌더링
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
+
+        <!-- Template Selector Bar -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">빠른 템플릿:</span>
+                <button onclick="loadTemplate('flowchart')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-xs font-medium transition">플로우차트</button>
+                <button onclick="loadTemplate('mindmap')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-xs font-medium transition">마인드맵</button>
+                <button onclick="loadTemplate('sequence')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-xs font-medium transition">시퀀스 다이어그램</button>
+                <button onclick="loadTemplate('gantt')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-xs font-medium transition">간트차트 (일정표)</button>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs text-slate-500 font-medium">테마:</span>
+                <select id="theme-select" onchange="renderDiagram()" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs outline-none text-slate-700">
+                    <option value="default">기본 (Default)</option>
+                    <option value="neutral">모던 그레이 (Neutral)</option>
+                    <option value="forest">포레스트 (Forest)</option>
+                    <option value="dark">다크 모드 (Dark)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Editor & Preview Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+            <!-- Left: Text/Code Input (5 cols) -->
+            <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 flex flex-col justify-between shadow-sm">
+                <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Mermaid 문법 입력</span>
+                        <a href="https://mermaid.js.org/syntax/flowchart.html" target="_blank" class="text-xs text-indigo-500 hover:underline">문법 가이드 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
+                    </div>
+                    <textarea id="mermaid-code" class="w-full h-[460px] p-3 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs text-slate-800 focus:bg-white focus:border-indigo-500 outline-none resize-none leading-relaxed transition"></textarea>
+                </div>
+                <div id="error-msg" class="hidden mt-3 p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-600 font-mono"></div>
+            </div>
+
+            <!-- Right: Realtime Preview & Export (7 cols) -->
+            <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 flex flex-col justify-between shadow-sm">
+                <div class="flex-1 flex flex-col">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">실시간 미리보기</span>
+                        <div class="flex space-x-1.5">
+                            <button id="copy-svg-btn" class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-semibold transition flex items-center space-x-1">
+                                <i class="fa-regular fa-copy"></i>
+                                <span id="copy-btn-text">SVG 복사</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Container -->
+                    <div id="preview-container" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-6 flex items-center justify-center overflow-auto min-h-[400px]">
+                        <div id="mermaid-render" class="w-full flex justify-center"></div>
+                    </div>
+                </div>
+
+                <!-- Export Actions -->
+                <div class="pt-4 border-t border-slate-100 mt-4 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">우클릭으로도 이미지를 바로 복사할 수 있습니다.</span>
+                    <div class="flex space-x-2">
+                        <button onclick="downloadSVG()" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-code text-indigo-500"></i>
+                            <span>SVG 다운로드</span>
+                        </button>
+                        <button onclick="downloadPNG()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-sm">
+                            <i class="fa-solid fa-image"></i>
+                            <span>PNG 다운로드 (고화질)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        const mermaidCode = document.getElementById('mermaid-code');
+        const mermaidRender = document.getElementById('mermaid-render');
+        const errorMsg = document.getElementById('error-msg');
+        const themeSelect = document.getElementById('theme-select');
+        const copySvgBtn = document.getElementById('copy-svg-btn');
+        const copyBtnText = document.getElementById('copy-btn-text');
+
+        const templates = {
+            flowchart: `graph TD
+    A[사용자 유입] --> B{로그인 여부}
+    B -- 예 --> C[대시보드 이동]
+    B -- 아니오 --> D[간편 가입 유도]
+    D --> C
+    C --> E[3초 툴 사용]
+    E --> F[결과물 복사 & 다운로드]`,
+
+            mindmap: `mindmap
+  root((마이크로 SaaS))
+    클라이언트 연산
+      텍스트 정리기
+      글자수 분석기
+      다이어그램 툴
+    서버리스 API
+      Cloudflare Workers
+      Workers AI
+    수익화 및 SEO
+      애드센스 승인
+      서브도메인 확장`,
+
+            sequence: `sequenceDiagram
+    autonumber
+    actor 유저
+    participant 브라우저
+    participant MermaidJS
+    유저->>브라우저: 텍스트 다이어그램 입력
+    브라우저->>MermaidJS: 실시간 파싱 요청
+    MermaidJS-->>브라우저: 고화질 SVG 렌더링
+    브라우저->>유저: 0.1초 만에 화면 출력 및 PNG 다운로드`,
+
+            gantt: `gantt
+    title 마이크로 SaaS 툴킷 배포 일정
+    dateFormat  YYYY-MM-DD
+    section 1단계
+    글자수 분석 툴           :done,    des1, 2026-08-10, 2026-08-12
+    텍스트 정리기 툴         :done,    des2, 2026-08-13, 2026-08-15
+    section 2단계
+    다이어그램 생성기        :active,  des3, 2026-08-16, 2026-08-17
+    허브 페이지 최종 패키징  :         des4, after des3, 2d`
+        };
+
+        function loadTemplate(type) {
+            if (templates[type]) {
+                mermaidCode.value = templates[type];
+                renderDiagram();
+            }
+        }
+
+        let renderTimeout = null;
+        mermaidCode.addEventListener('input', () => {
+            clearTimeout(renderTimeout);
+            renderTimeout = setTimeout(renderDiagram, 300);
+        });
+
+        async function renderDiagram() {
+            const code = mermaidCode.value.trim();
+            if (!code) {
+                mermaidRender.innerHTML = '';
+                errorMsg.classList.add('hidden');
+                return;
+            }
+
+            try {
+                mermaid.initialize({
+                    startOnLoad: false,
+                    theme: themeSelect.value,
+                    securityLevel: 'loose'
+                });
+
+                const id = 'mermaid-svg-' + Date.now();
+                const { svg } = await mermaid.render(id, code);
+                mermaidRender.innerHTML = svg;
+                errorMsg.classList.add('hidden');
+            } catch (err) {
+                errorMsg.innerText = '문법 오류: ' + (err.message || '다이어그램 코드를 확인하세요.');
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        // SVG 복사
+        copySvgBtn.addEventListener('click', async () => {
+            const svgEl = mermaidRender.querySelector('svg');
+            if (!svgEl) return;
+            await navigator.clipboard.writeText(svgEl.outerHTML);
+            copyBtnText.innerText = '복사 완료!';
+            setTimeout(() => { copyBtnText.innerText = 'SVG 복사'; }, 1500);
+        });
+
+        // SVG 다운로드
+        function downloadSVG() {
+            const svgEl = mermaidRender.querySelector('svg');
+            if (!svgEl) return;
+            const blob = new Blob([svgEl.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `diagram_${Date.now()}.svg`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // PNG 고화질 다운로드 (캔버스 2배 스케일링)
+        function downloadPNG() {
+            const svgEl = mermaidRender.querySelector('svg');
+            if (!svgEl) return;
+
+            const svgData = new XMLSerializer().serializeToString(svgEl);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const URLObj = window.URL || window.webkitURL || window;
+            const blobURL = URLObj.createObjectURL(svgBlob);
+
+            const image = new Image();
+            image.onload = () => {
+                const canvas = document.createElement('canvas');
+                const scale = 2; // 2배 고해상도
+                const bbox = svgEl.getBoundingClientRect();
+                canvas.width = (bbox.width || 800) * scale;
+                canvas.height = (bbox.height || 600) * scale;
+
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.scale(scale, scale);
+                ctx.drawImage(image, 0, 0);
+
+                const pngURL = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = pngURL;
+                a.download = `diagram_${Date.now()}.png`;
+                a.click();
+                URLObj.revokeObjectURL(blobURL);
+            };
+            image.src = blobURL;
+        }
+
+        // 초기 실행
+        loadTemplate('flowchart');
+    </script>
+</body>
+</html>
