@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tool.starsign16.com/sitemap.xml
