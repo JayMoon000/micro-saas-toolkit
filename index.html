@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarSign Toolkit - 초경량 생산성 유틸리티</title>
-    <meta name="description" content="설치와 로그인 없이 3초 만에 해결하는 브라우저 기반 초슬림 웹 툴킷">
+    <title>StarSign Toolkit - 초경량 웹 도구 모음</title>
+    <meta name="description" content="서버비 $0, 무설치, 노로그인. 브라우저에서 100% 클라이언트 연산으로 즉시 실행되는 6가지 고성능 마이크로 웹 툴킷.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -13,149 +13,203 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Header -->
-    <header class="border-b border-slate-200 bg-white/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <!-- Global Header -->
+    <header class="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <span class="text-2xl">⚡</span>
+                <span class="w-9 h-9 bg-amber-400 text-slate-900 rounded-xl flex items-center justify-center font-black shadow-xs text-lg">⚡</span>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight text-slate-900">StarSign Toolkit</h1>
-                    <p class="text-xs text-slate-500 font-medium">서버비 $0 · 무설치 · 노로그인 초경량 도구 모음</p>
+                    <h1 class="text-base font-bold text-slate-900 tracking-tight leading-none">StarSign Toolkit</h1>
+                    <p class="text-[11px] text-slate-400 mt-0.5">서버비 $0 · 무설치 · 노로그인 초경량 도구 모음</p>
                 </div>
             </div>
-            <a href="https://starsign16.com" target="_blank" class="text-xs text-slate-400 hover:text-slate-600 transition">
-                starsign16.com ↗
+            <a href="https://starsign16.com" target="_blank" class="text-xs font-semibold text-slate-500 hover:text-indigo-600 transition flex items-center space-x-1">
+                <span>starsign16.com</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
             </a>
         </div>
     </header>
 
-    <!-- Main Cards Section -->
-    <main class="max-w-5xl mx-auto px-6 py-12 flex-1 w-full">
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-slate-900 mb-2">실행 도구 선택</h2>
-            <p class="text-sm text-slate-600">브라우저 내에서 즉시 100% 클라이언트 연산으로 처리됩니다.</p>
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-6 py-10 flex-1 w-full space-y-8">
+
+        <!-- Hero Section -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-slate-200/60">
+            <div>
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-100/80">Client-Side Micro Apps</span>
+                <h2 class="text-2xl font-black text-slate-900 mt-2 tracking-tight">실행 도구 선택</h2>
+                <p class="text-xs text-slate-500 mt-1">모든 데이터는 브라우저 내에서 즉시 100% 클라이언트 연산으로 안전하게 처리됩니다.</p>
+            </div>
+            <!-- Quick Filter Tabs -->
+            <div class="flex items-center space-x-1 bg-slate-200/60 p-1 rounded-xl text-xs font-semibold select-none self-start md:self-auto">
+                <button onclick="filterTools('all')" id="tab-all" class="px-3 py-1.5 rounded-lg bg-white text-indigo-600 shadow-xs transition">전체 (6)</button>
+                <button onclick="filterTools('text')" id="tab-text" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">텍스트/문서</button>
+                <button onclick="filterTools('visual')" id="tab-visual" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">시각화/차트</button>
+                <button onclick="filterTools('productivity')" id="tab-productivity" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">생산성</button>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- 6 Tools Grid (Unified Design) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <!-- Tool 1: Flowchart Maker -->
-            <a href="flowchart_maker.html" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-lg transition duration-200 flex flex-col justify-between">
+            <!-- Tool 1: 노코드 플로우차트 메이커 -->
+            <a href="flowchart_maker.html" data-category="visual" class="tool-card group bg-white rounded-2xl p-6 border border-slate-200/80 hover:border-indigo-500 hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col justify-between">
                 <div>
-                    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
-                        <i class="fa-solid fa-diagram-project"></i>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-diagram-project"></i>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">Active</span>
                     </div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition">노코드 플로우차트 메이커</h3>
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600">Active</span>
-                    </div>
-                    <p class="text-sm text-slate-500 leading-relaxed">
+                    <h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition">노코드 플로우차트 메이커</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
                         블록 조립 방식으로 텍스트 다이어그램과 순서도를 3초 만에 생성하고 이미지로 내보냅니다.
                     </p>
                 </div>
-                <div class="mt-6 flex items-center text-xs font-semibold text-indigo-600">
-                    도구 열기 <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition"></i>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                    <span>도구 열기</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </a>
 
-            <!-- Tool 2: EPUB Maker -->
-            <a href="epub_maker.html" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-sky-400 hover:shadow-lg transition duration-200 flex flex-col justify-between">
+            <!-- Tool 2: 1초 전자책(EPUB) 변환기 -->
+            <a href="epub_converter.html" data-category="text" class="tool-card group bg-white rounded-2xl p-6 border border-slate-200/80 hover:border-indigo-500 hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col justify-between">
                 <div>
-                    <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
-                        <i class="fa-solid fa-book-open"></i>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">Active</span>
                     </div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition">1초 전자책(EPUB) 변환기</h3>
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600">Active</span>
-                    </div>
-                    <p class="text-sm text-slate-500 leading-relaxed">
+                    <h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition">1초 전자책(EPUB) 변환기</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
                         PDF, DOCX, TXT, MD 문서를 1초 만에 깔끔한 표준 EPUB 전자책 포맷으로 패키징합니다.
                     </p>
                 </div>
-                <div class="mt-6 flex items-center text-xs font-semibold text-sky-600">
-                    도구 열기 <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition"></i>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                    <span>도구 열기</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </a>
 
-            <!-- Tool 3: Fast Calendar -->
-            <a href="fast_calendar.html" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-amber-400 hover:shadow-lg transition duration-200 flex flex-col justify-between">
+            <!-- Tool 3: 자연어 퀵 캘린더 등록기 -->
+            <a href="quick_calendar.html" data-category="productivity" class="tool-card group bg-white rounded-2xl p-6 border border-slate-200/80 hover:border-indigo-500 hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col justify-between">
                 <div>
-                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
-                        <i class="fa-regular fa-calendar-check"></i>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-regular fa-calendar-check"></i>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">Active</span>
                     </div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-amber-600 transition">자연어 퀵 캘린더 등록기</h3>
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600">Active</span>
-                    </div>
-                    <p class="text-sm text-slate-500 leading-relaxed">
+                    <h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition">자연어 퀵 캘린더 등록기</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
                         자유로운 일상 메모나 약속 텍스트를 파싱하여 구글 캘린더에 원클릭으로 바로 등록합니다.
                     </p>
                 </div>
-                <div class="mt-6 flex items-center text-xs font-semibold text-amber-600">
-                    도구 열기 <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition"></i>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                    <span>도구 열기</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </a>
 
-            <!-- Tool 4: Character Counter -->
-            <a href="char_counter.html" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-rose-400 hover:shadow-lg transition duration-200 flex flex-col justify-between">
+            <!-- Tool 4: 실시간 글자수 & 바이트 분석기 -->
+            <a href="word_counter.html" data-category="text" class="tool-card group bg-white rounded-2xl p-6 border border-slate-200/80 hover:border-indigo-500 hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col justify-between">
                 <div>
-                    <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
-                        <i class="fa-solid fa-calculator"></i>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">Active</span>
                     </div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-rose-600 transition">실시간 글자수 & 바이트 분석기</h3>
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600">Active</span>
-                    </div>
-                    <p class="text-sm text-slate-500 leading-relaxed">
+                    <h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition">실시간 글자수 & 바이트 분석기</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
                         공백 포함/제외 글자수, UTF-8/EUC-KR 바이트 및 문단 수를 실시간으로 정밀 측정합니다.
                     </p>
                 </div>
-                <div class="mt-6 flex items-center text-xs font-semibold text-rose-600">
-                    도구 열기 <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition"></i>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                    <span>도구 열기</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </a>
 
-			<!-- Tool: 텍스트 중복 제거 & 정렬기 -->
-			<a href="text_cleaner.html" class="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-indigo-500 hover:shadow-lg transition-all flex flex-col justify-between">
-				<div>
-					<div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
-						🧹
-					</div>
-					<h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition">텍스트 중복 제거 & 정렬기</h3>
-					<p class="text-xs text-slate-500 mt-2 leading-relaxed">
-						대량의 키워드, 이메일, 리스트 데이터의 중복을 실시간으로 싹 제거하고 정렬합니다.
-					</p>
-				</div>
-				<div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-					<span class="font-medium text-emerald-600">초고속 클라이언트 처리</span>
-					<i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform text-indigo-500"></i>
-				</div>
-			</a>
-			
-			<!-- Tool: 3초 파스텔 차트 시각화기 -->
-			<a href="visualizer.html" class="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-indigo-500 hover:shadow-lg transition-all flex flex-col justify-between">
-				<div>
-					<div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
-						📈
-				</div>
-				<h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition">3초 파스텔 차트 시각화기</h3>
-				<p class="text-xs text-slate-500 mt-2 leading-relaxed">
-					엑셀, CSV, 표 데이터를 붙여넣으면 감성적인 파스텔 차트로 즉시 렌더링하고 고화질 PNG로 저장합니다.
-				</p>
-				</div>
-				<div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-					<span class="font-medium text-emerald-600">Chart.js 실시간 렌더링</span>
-					<i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform text-indigo-500"></i>
-				</div>
-			</a>
+            <!-- Tool 5: 텍스트 중복 제거 & 정렬기 -->
+            <a href="text_cleaner.html" data-category="text" class="tool-card group bg-white rounded-2xl p-6 border border-slate-200/80 hover:border-indigo-500 hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-violet-50 text-violet-600 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-broom"></i>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">Active</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition">텍스트 중복 제거 & 정렬기</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                        대량의 키워드, 이메일, 리스트 데이터의 중복을 0.1초 만에 싹 제거하고 정렬합니다.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                    <span>도구 열기</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </a>
+
+            <!-- Tool 6: 3초 파스텔 차트 시각화기 -->
+            <a href="visualizer.html" data-category="visual" class="tool-card group bg-white rounded-2xl p-6 border border-slate-200/80 hover:border-indigo-500 hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">Active</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition">3초 파스텔 차트 시각화기</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                        엑셀, CSV, 표 데이터를 붙여넣으면 감성적인 파스텔 차트로 즉시 렌더링하고 다운로드합니다.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                    <span>도구 열기</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </a>
+
         </div>
+
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-200 bg-white py-6">
-        <div class="max-w-5xl mx-auto px-6 text-center text-xs text-slate-400">
-            © 2026 StarSign Toolkit. Zero Server Cost, Privacy Focused (Client-Side Computing).
+    <footer class="border-t border-slate-200/80 bg-white py-6 mt-12">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+            <span>© 2026 StarSign Toolkit. Zero Server Cost & Ultra-fast Client Suite.</span>
+            <div class="flex space-x-4">
+                <a href="https://starsign16.com" target="_blank" class="hover:text-slate-700 transition">Main Hub</a>
+                <span>·</span>
+                <span class="text-emerald-600 font-medium">All Systems Operational</span>
+            </div>
         </div>
     </footer>
 
+    <script>
+        function filterTools(category) {
+            const cards = document.querySelectorAll('.tool-card');
+            const tabs = ['all', 'text', 'visual', 'productivity'];
+
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === category) {
+                    btn.className = "px-3 py-1.5 rounded-lg bg-white text-indigo-600 shadow-xs transition";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+                }
+            });
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
