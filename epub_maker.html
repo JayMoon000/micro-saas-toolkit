@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1초 전자책(EPUB) 변환기 - StarSign16 Toolkit</title>
-    <meta name="description" content="TXT, 마크다운 텍스트를 브라우저에서 1초 만에 표준 EPUB 전자책으로 패키징하고 다운로드합니다.">
+    <meta name="description" content="PDF, DOCX, TXT, MD 문서를 1초 만에 깔끔한 표준 EPUB 전자책 포맷으로 패키징합니다.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Client-Side Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
     </style>
@@ -17,10 +21,10 @@
 
     <!-- Header -->
     <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <a href="index.html" class="text-slate-400 hover:text-slate-200 transition mr-2 text-sm font-semibold flex items-center">
-                    <i class="fa-solid fa-arrow-left mr-1.5"></i> 허브로
+                    <i class="fa-solid fa-arrow-left mr-1.5"></i> 메인으로
                 </a>
                 <div class="w-8 h-8 bg-sky-950/80 text-sky-400 border border-sky-800/50 rounded-lg flex items-center justify-center text-sm">
                     <i class="fa-solid fa-book-open"></i>
@@ -28,39 +32,57 @@
                 <h1 class="text-base font-bold text-slate-50">1초 전자책(EPUB) 변환기</h1>
             </div>
             <span class="text-xs font-semibold px-2.5 py-1 rounded bg-sky-950/80 text-sky-400 border border-sky-800/60">
-                100% 브라우저 EPUB 패키징
+                멀티 포맷 드래그 앤 드롭
             </span>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-4xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
+    <main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full flex flex-col lg:flex-row gap-6">
 
-        <!-- Metadata Inputs -->
-        <div class="bg-slate-800/80 rounded-2xl border border-slate-700/70 p-6 shadow-2xl space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <!-- Left Input Pane -->
+        <div class="flex-1 bg-slate-800/80 border border-slate-700/70 rounded-2xl p-5 flex flex-col gap-4 shadow-2xl">
+            <!-- Drag & Drop Zone -->
+            <div id="dropZone" onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-sky-700/80 bg-sky-950/30 hover:bg-sky-950/60 hover:border-sky-500 rounded-xl p-6 text-center cursor-pointer transition text-sky-300 text-xs font-medium flex flex-col items-center justify-center space-y-2">
+                <i class="fa-solid fa-cloud-arrow-up text-2xl text-sky-400"></i>
+                <span>PDF, DOCX, MD, HTML, TXT 파일 드래그 앤 드롭 또는 클릭해서 업로드</span>
+                <input type="file" id="fileInput" accept=".pdf,.docx,.md,.html,.txt" class="hidden" onchange="handleFileSelect(event)">
+            </div>
+
+            <!-- Meta Group -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                    <label class="block font-bold text-slate-300 mb-1.5">도서 제목</label>
-                    <input type="text" id="epub-title" value="나의 첫 번째 전자책" class="w-full bg-slate-900/90 border border-slate-700/70 rounded-xl px-3.5 py-2.5 outline-none focus:border-sky-500 text-slate-200 transition">
+                    <label class="block text-xs font-bold text-slate-400 mb-1">도서 제목</label>
+                    <input type="text" id="bookTitle" value="나의 첫 번째 전자책" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 outline-none focus:border-sky-500 transition">
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-300 mb-1.5">저자 이름</label>
-                    <input type="text" id="epub-author" value="Jay" class="w-full bg-slate-900/90 border border-slate-700/70 rounded-xl px-3.5 py-2.5 outline-none focus:border-sky-500 text-slate-200 transition">
+                    <label class="block text-xs font-bold text-slate-400 mb-1">저자 이름</label>
+                    <input type="text" id="bookAuthor" value="Jay" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 outline-none focus:border-sky-500 transition">
                 </div>
             </div>
 
-            <!-- Content Area -->
-            <div>
-                <div class="flex items-center justify-between pb-2 mb-2">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">본문 텍스트 (Markdown / TXT)</label>
-                    <span class="text-[11px] text-slate-500">서버 전송 없이 로컬에서 생성</span>
+            <!-- Text Content -->
+            <div class="flex-1 flex flex-col">
+                <label class="block text-xs font-bold text-slate-400 mb-1">원문 내용 (HTML / 마크다운 / 텍스트)</label>
+                <textarea id="bookContent" oninput="updatePreview()" class="w-full h-80 p-3.5 bg-slate-900 border border-slate-700 rounded-xl font-mono text-xs text-slate-200 outline-none focus:border-sky-500 resize-none leading-relaxed transition" placeholder="텍스트를 직접 붙여넣거나 위에서 파일을 드롭하세요..."></textarea>
+            </div>
+        </div>
+
+        <!-- Right Preview Pane -->
+        <div class="w-full lg:w-96 bg-slate-800/80 border border-slate-700/70 rounded-2xl p-5 flex flex-col justify-between shadow-2xl">
+            <div class="flex-1 flex flex-col">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider pb-3 border-b border-slate-700/60 mb-3">📱 전자책 리더기 미리보기</span>
+                <div class="flex-1 bg-amber-50 rounded-xl p-5 overflow-y-auto font-serif text-slate-900 leading-relaxed shadow-inner max-h-[500px]">
+                    <h2 id="prevTitle" class="text-base font-bold border-b border-amber-200 pb-2 mb-2 text-center text-slate-950">나의 첫 번째 전자책</h2>
+                    <p id="prevAuthor" class="text-[11px] text-amber-800 text-center mb-4">저자: Jay</p>
+                    <div id="prevContent" class="text-xs text-slate-800 space-y-2">
+                        <p>본문 내용이 리더기 화면으로 미리 보여집니다.</p>
+                    </div>
                 </div>
-                <textarea id="epub-content" class="w-full h-72 p-4 bg-slate-900/90 border border-slate-700/70 rounded-xl font-mono text-xs text-slate-200 focus:border-sky-500 outline-none resize-none leading-relaxed transition" placeholder="전자책으로 변환할 본문 내용을 입력하세요..."></textarea>
             </div>
 
-            <!-- Action Button -->
-            <div class="pt-2 flex justify-end">
-                <button onclick="generateEPUB()" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs transition flex items-center space-x-2 shadow-lg shadow-sky-600/20">
+            <div class="pt-4 mt-4 border-t border-slate-700/60">
+                <button onclick="generateEPUB()" class="w-full py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs transition flex items-center justify-center space-x-2 shadow-lg shadow-sky-600/20">
                     <i class="fa-solid fa-download"></i>
                     <span>표준 EPUB 파일 즉시 다운로드</span>
                 </button>
@@ -70,63 +92,148 @@
     </main>
 
     <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const dropZone = document.getElementById('dropZone');
+        const bookTitle = document.getElementById('bookTitle');
+        const bookAuthor = document.getElementById('bookAuthor');
+        const bookContent = document.getElementById('bookContent');
+
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('bg-sky-950/80'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('bg-sky-950/80'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('bg-sky-950/80');
+            if (e.dataTransfer.files.length > 0) processFile(e.dataTransfer.files[0]);
+        });
+
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) processFile(e.target.files[0]);
+        }
+
+        async function processFile(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            bookTitle.value = file.name.replace(/\.[^/.]+$/, "");
+
+            if (ext === 'pdf') {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let fullText = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    if (pageText.trim()) fullText += `<p>${escapeXml(pageText)}</p>`;
+                }
+                bookContent.value = fullText || '<p>PDF에서 텍스트를 추출하지 못했습니다.</p>';
+            } else if (ext === 'docx') {
+                const arrayBuffer = await file.arrayBuffer();
+                const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+                bookContent.value = result.value;
+            } else if (ext === 'md') {
+                const text = await file.text();
+                bookContent.value = marked.parse(text);
+            } else if (ext === 'txt') {
+                const text = await file.text();
+                bookContent.value = text.split('\n').map(line => line.trim() ? `<p>${escapeXml(line)}</p>` : '<br/>').join('\n');
+            } else if (ext === 'html') {
+                bookContent.value = await file.text();
+            } else {
+                alert('지원하지 않는 파일 형식입니다.');
+                return;
+            }
+            updatePreview();
+        }
+
+        function updatePreview() {
+            document.getElementById('prevTitle').innerText = bookTitle.value || '제목 없음';
+            document.getElementById('prevAuthor').innerText = `저자: ${bookAuthor.value || '작자미상'}`;
+            document.getElementById('prevContent').innerHTML = bookContent.value || '내용을 입력해주세요.';
+        }
+
         async function generateEPUB() {
-            const title = document.getElementById('epub-title').value.trim() || '전자책';
-            const author = document.getElementById('epub-author').value.trim() || '저자 미상';
-            const content = document.getElementById('epub-content').value.trim() || '내용이 없습니다.';
+            const title = bookTitle.value.trim() || 'Untitled';
+            const author = bookAuthor.value.trim() || 'Anonymous';
+            const content = bookContent.value.trim();
+
+            if (!content) {
+                alert('본문 내용을 입력해주세요!');
+                return;
+            }
 
             const zip = new JSZip();
-
-            // 1. mimetype (압축 안 함)
             zip.file("mimetype", "application/epub+zip", { compression: "STORE" });
 
-            // 2. META-INF/container.xml
-            zip.folder("META-INF").file("container.xml", `<?xml version="1.0"?>
+            zip.folder("META-INF").file("container.xml", 
+`<?xml version="1.0"?>
 <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-  <rootfiles>
-    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
-  </rootfiles>
-</container>`);
+ <rootfiles>
+ <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+ </rootfiles>
+</container>`
+            );
 
-            // 3. OEBPS 폴더 구성
-            const oebps = zip.folder("OEBPS");
-            
-            // XHTML 본문
-            const htmlContent = `<?xml version="1.0" encoding="utf-8"?>
+            zip.folder("OEBPS").file("content.xhtml",
+`<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head><title>${title}</title><style>body{font-family:sans-serif;line-height:1.6;padding:5%;}h1{color:#333;}</style></head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
+<head>
+ <title>${escapeXml(title)}</title>
+ <style>
+ body { font-family: sans-serif; line-height: 1.8; padding: 5%; color: #111; }
+ h1 { text-align: center; margin-bottom: 0.5em; }
+ .author { text-align: center; color: #666; margin-bottom: 2em; font-size: 0.9em; }
+ p { margin-bottom: 0.8em; text-align: justify; }
+ </style>
+</head>
 <body>
-  <h1>${title}</h1>
-  <p><strong>저자:</strong> ${author}</p>
-  <hr/>
-  ${content.split('\n').map(p => p.trim() ? `<p>${p}</p>` : '').join('')}
+ <h1>${escapeXml(title)}</h1>
+ <div class="author">저자: ${escapeXml(author)}</div>
+ <hr/>
+ <br/>
+ ${content}
 </body>
-</html>`;
-            oebps.file("chapter1.xhtml", htmlContent);
+</html>`
+            );
 
-            // OPF 파일
-            oebps.file("content.opf", `<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
-  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <dc:title>${title}</dc:title>
-    <dc:creator>${author}</dc:creator>
-    <dc:language>ko</dc:language>
-  </metadata>
-  <manifest>
-    <item id="chapter1" href="chapter1.xhtml" media-type="application/xhtml+xml"/>
-  </manifest>
-  <spine>
-    <itemref idref="chapter1"/>
-  </spine>
-</package>`);
+            zip.folder("OEBPS").file("content.opf",
+`<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="BookId">
+ <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <dc:identifier id="BookId">urn:uuid:${generateUUID()}</dc:identifier>
+ <dc:title>${escapeXml(title)}</dc:title>
+ <dc:creator>${escapeXml(author)}</dc:creator>
+ <dc:language>ko</dc:language>
+ </metadata>
+ <manifest>
+ <item id="content" href="content.xhtml" media-type="application/xhtml+xml"/>
+ </manifest>
+ <spine>
+ <itemref idref="content"/>
+ </spine>
+</package>`
+            );
 
             const blob = await zip.generateAsync({ type: "blob", mimeType: "application/epub+zip" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = `${title}.epub`;
+            link.download = `${title.replace(/[/\\?%*:|"<>]/g, '_')}.epub`;
             link.click();
         }
+
+        function escapeXml(unsafe) {
+            return unsafe.replace(/[<>&'"]/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '\'':'&apos;', '"':'&quot;' }[c]));
+        }
+
+        function generateUUID() {
+            return 'axxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        bookContent.value = `<p><b>PDF, DOCX, MD, HTML, TXT</b> 파일 지원 완벽 탑재!</p><p>파일을 드롭하면 1초 만에 EPUB 전자책으로 변환됩니다.</p>`;
+        updatePreview();
     </script>
 </body>
 </html>

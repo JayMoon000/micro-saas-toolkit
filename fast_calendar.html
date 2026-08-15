@@ -16,10 +16,10 @@
 
     <!-- Header -->
     <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <a href="index.html" class="text-slate-400 hover:text-slate-200 transition mr-2 text-sm font-semibold flex items-center">
-                    <i class="fa-solid fa-arrow-left mr-1.5"></i> 허브로
+                    <i class="fa-solid fa-arrow-left mr-1.5"></i> 메인으로
                 </a>
                 <div class="w-8 h-8 bg-amber-950/80 text-amber-400 border border-amber-800/50 rounded-lg flex items-center justify-center text-sm">
                     <i class="fa-regular fa-calendar-check"></i>
@@ -27,102 +27,168 @@
                 <h1 class="text-base font-bold text-slate-50">자연어 퀵 캘린더 등록기</h1>
             </div>
             <span class="text-xs font-semibold px-2.5 py-1 rounded bg-amber-950/80 text-amber-400 border border-amber-800/60">
-                100% 클라이언트 연산
+                한국어 문장 자동 분석
             </span>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-4xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
+    <main class="max-w-6xl mx-auto px-6 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <!-- Input Box -->
-        <div class="bg-slate-800/80 rounded-2xl border border-slate-700/70 p-6 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-700/60">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">약속 / 일정 문장 입력</span>
-                <button onclick="loadSample()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold">예시 입력</button>
-            </div>
-
-            <textarea id="event-input" class="w-full h-32 p-4 bg-slate-900/90 border border-slate-700/70 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:border-amber-500 outline-none resize-none leading-relaxed transition" placeholder="예: 내일 오후 3시 강남역에서 팀 미팅&#10;다음주 금요일 저녁 7시 저녁 약속"></textarea>
-
-            <div class="flex justify-end">
-                <button onclick="parseAndGenerate()" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center space-x-1.5 shadow-sm">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    <span>일정 파싱 및 캘린더 링크 생성</span>
-                </button>
+        <!-- Left Input Panel -->
+        <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-5 flex flex-col justify-between shadow-2xl">
+            <div class="flex flex-col flex-1">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-700/60 mb-3">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">📝 메모 / 약속 문장 붙여넣기</span>
+                </div>
+                <textarea id="memoInput" oninput="parseMemo()" class="w-full flex-1 min-h-[380px] p-4 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-200 placeholder-slate-600 outline-none focus:border-amber-500 resize-none leading-relaxed transition" placeholder="예시 문장을 붙여넣어 보세요:&#10;&#10;8월15일 오후 3시에 합정역 앞에서 명석이 만남&#10;다음주 월요일 오전 10시 제품 개발 기획 회의"></textarea>
             </div>
         </div>
 
-        <!-- Result Box -->
-        <div id="result-box" class="hidden bg-slate-800/80 rounded-2xl border border-slate-700/70 p-6 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-700/60">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">추출된 일정 정보</span>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">준비 완료</span>
+        <!-- Right Parsing & Calendar Panel -->
+        <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-5 flex flex-col justify-between shadow-2xl space-y-4">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-700/60">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">⚡ 자동 추출 파싱 결과</span>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">실시간 연동</span>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">일정 제목</label>
+                    <input type="text" id="eventTitle" placeholder="일정 제목" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 outline-none focus:border-amber-500 transition">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">시작 일시</label>
+                        <input type="datetime-local" id="eventStart" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:border-amber-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">종료 일시</label>
+                        <input type="datetime-local" id="eventEnd" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:border-amber-500 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">장소</label>
+                    <input type="text" id="eventLocation" placeholder="장소 (예: 강남역, Zoom)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 outline-none focus:border-amber-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">상세 내용</label>
+                    <textarea id="eventDetails" class="w-full h-24 p-3 bg-slate-900 border border-slate-700 rounded-xl text-xs text-slate-200 outline-none focus:border-amber-500 resize-none transition" placeholder="상세 메모 내용"></textarea>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/60">
-                    <span class="text-slate-500 block mb-1">제목</span>
-                    <strong id="res-title" class="text-slate-100 text-sm font-semibold">-</strong>
-                </div>
-                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/60">
-                    <span class="text-slate-500 block mb-1">날짜/시간</span>
-                    <strong id="res-date" class="text-slate-100 text-sm font-semibold">-</strong>
-                </div>
-                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/60">
-                    <span class="text-slate-500 block mb-1">장소/메모</span>
-                    <strong id="res-loc" class="text-slate-100 text-sm font-semibold">-</strong>
-                </div>
-            </div>
-
-            <div class="pt-2 flex justify-end">
-                <a id="gcal-btn" href="#" target="_blank" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center space-x-2 shadow-lg shadow-indigo-600/20">
+            <div class="pt-2">
+                <button onclick="openGoogleCalendar()" class="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center justify-center space-x-2 shadow-lg shadow-amber-500/20">
                     <i class="fa-brands fa-google"></i>
-                    <span>구글 캘린더에 원클릭 등록하기</span>
-                </a>
+                    <span>구글 캘린더에 1초 등록하기</span>
+                </button>
             </div>
         </div>
 
     </main>
 
     <script>
-        const input = document.getElementById('event-input');
-        const resultBox = document.getElementById('result-box');
-        const resTitle = document.getElementById('res-title');
-        const resDate = document.getElementById('res-date');
-        const resLoc = document.getElementById('res-loc');
-        const gcalBtn = document.getElementById('gcal-btn');
+        const memoInput = document.getElementById('memoInput');
+        const eventTitle = document.getElementById('eventTitle');
+        const eventStart = document.getElementById('eventStart');
+        const eventEnd = document.getElementById('eventEnd');
+        const eventLocation = document.getElementById('eventLocation');
+        const eventDetails = document.getElementById('eventDetails');
 
-        function loadSample() {
-            input.value = "내일 오후 3시 판교 카카오 본사에서 프로젝트 미팅";
-            parseAndGenerate();
-        }
-
-        function parseAndGenerate() {
-            const text = input.value.trim();
+        function parseMemo() {
+            const text = memoInput.value.trim();
             if (!text) return;
 
-            let title = text;
-            let date = new Date();
-            date.setDate(date.getDate() + 1); // 기본 내일
-            date.setHours(15, 0, 0, 0);
+            eventDetails.value = text;
 
-            if (text.includes("오늘")) {
-                date = new Date();
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = now.getMonth();
+            let date = now.getDate();
+            let hours = 14;
+            let minutes = 0;
+
+            const dateMatch = text.match(/(\d{1,2})\s*월\s*(\d{1,2})\s*일?|(\d{1,2})\/(\d{1,2})/);
+            if (dateMatch) {
+                let m = parseInt(dateMatch[1] || dateMatch[3]) - 1;
+                let d = parseInt(dateMatch[2] || dateMatch[4]);
+                month = m;
+                date = d;
+            } else {
+                if (text.includes('내일')) {
+                    let t = new Date(); t.setDate(t.getDate() + 1);
+                    month = t.getMonth(); date = t.getDate();
+                } else if (text.includes('모레')) {
+                    let t = new Date(); t.setDate(t.getDate() + 2);
+                    month = t.getMonth(); date = t.getDate();
+                } else if (text.includes('다음주')) {
+                    let t = new Date(); t.setDate(t.getDate() + 7);
+                    month = t.getMonth(); date = t.getDate();
+                }
             }
 
-            const startTime = date.toISOString().replace(/-|:|\.\d+/g, '');
-            date.setHours(date.getHours() + 1);
-            const endTime = date.toISOString().replace(/-|:|\.\d+/g, '');
+            const timeMatch = text.match(/(오전|오후)?\s*(\d{1,2})\s*(?:시|:)\s*(\d{1,2})?분?/);
+            if (timeMatch) {
+                let h = parseInt(timeMatch[2]);
+                let m = timeMatch[3] ? parseInt(timeMatch[3]) : 0;
+                if (text.includes('반') && !timeMatch[3]) m = 30;
 
-            resTitle.innerText = title;
-            resDate.innerText = "예정 시간 (기본 1시간)";
-            resLoc.innerText = "자동 감지됨";
+                const isPM = timeMatch[1] === '오후' || (!timeMatch[1] && text.includes('오후'));
+                const isAM = timeMatch[1] === '오전' || (!timeMatch[1] && text.includes('오전'));
 
-            const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent(text)}`;
-            gcalBtn.href = gcalUrl;
+                if (isPM && h < 12) h += 12;
+                if (isAM && h === 12) h = 0;
 
-            resultBox.classList.remove('hidden');
+                hours = h;
+                minutes = m;
+            }
+
+            let startDate = new Date(year, month, date, hours, minutes);
+            let endDate = new Date(startDate);
+            endDate.setHours(startDate.getHours() + 1);
+
+            eventStart.value = formatDateTimeLocal(startDate);
+            eventEnd.value = formatDateTimeLocal(endDate);
+
+            let cleanTitle = text.split('\n')[0]
+                .replace(/(\d{1,2}\s*월\s*\d{1,2}\s*일?|\d{1,2}\/\d{1,2})/g, '')
+                .replace(/(오늘|내일|모레|다음주)/g, '')
+                .replace(/(오전|오후)?\s*\d{1,2}\s*(?:시|:)\s*(\d{1,2}분?)?/g, '')
+                .replace(/^[\s,.\-에서과와을를이가]+/, '')
+                .trim();
+
+            eventTitle.value = cleanTitle || '새 일정';
+
+            const locMatch = text.match(/([가-힣a-zA-Z0-9]+(?:역|에서| Zoom|줌|카페|룸|홀))/);
+            if (locMatch) {
+                eventLocation.value = locMatch[1].replace(/에서$/, '');
+            } else {
+                eventLocation.value = '';
+            }
         }
+
+        function formatDateTimeLocal(d) {
+            const pad = n => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        function openGoogleCalendar() {
+            const title = encodeURIComponent(eventTitle.value || '일정');
+            const details = encodeURIComponent(eventDetails.value || '');
+            const location = encodeURIComponent(eventLocation.value || '');
+
+            const start = new Date(eventStart.value).toISOString().replace(/-|:|\.\d\d\d/g, "");
+            const end = new Date(eventEnd.value).toISOString().replace(/-|:|\.\d\d\d/g, "");
+
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}`;
+            window.open(url, '_blank');
+        }
+
+        memoInput.value = "8월15일 오후 3시에 합정역 앞에서 명석이 만남.";
+        parseMemo();
     </script>
 </body>
 </html>

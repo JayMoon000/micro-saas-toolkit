@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>노코드 플로우차트 메이커 - StarSign16 Toolkit</title>
-    <meta name="description" content="텍스트 입력만으로 고화질 플로우차트와 순서도를 3초 만에 렌더링하고 이미지로 다운로드합니다.">
+    <meta name="description" content="블록 조립 방식으로 텍스트 순서도를 3초 만에 만들고 PNG/SVG로 내보냅니다.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,7 +20,7 @@
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <a href="index.html" class="text-slate-400 hover:text-slate-200 transition mr-2 text-sm font-semibold flex items-center">
-                    <i class="fa-solid fa-arrow-left mr-1.5"></i> 허브로
+                    <i class="fa-solid fa-arrow-left mr-1.5"></i> 메인으로
                 </a>
                 <div class="w-8 h-8 bg-indigo-950/80 text-indigo-400 border border-indigo-800/50 rounded-lg flex items-center justify-center text-sm">
                     <i class="fa-solid fa-diagram-project"></i>
@@ -28,196 +28,252 @@
                 <h1 class="text-base font-bold text-slate-50">노코드 플로우차트 메이커</h1>
             </div>
             <span class="text-xs font-semibold px-2.5 py-1 rounded bg-indigo-950/80 text-indigo-400 border border-indigo-800/60">
-                Mermaid.js 실시간 렌더링
+                블록 조립 에디터
             </span>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
+    <main class="max-w-7xl mx-auto px-6 py-6 flex-1 w-full flex flex-col lg:flex-row gap-6">
 
-        <!-- Template Selector Bar -->
-        <div class="bg-slate-800/80 rounded-2xl border border-slate-700/70 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center space-x-2">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">빠른 템플릿:</span>
-                <button onclick="loadTemplate('flowchart')" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-xs font-medium text-slate-200 transition">플로우차트</button>
-                <button onclick="loadTemplate('mindmap')" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-xs font-medium text-slate-200 transition">마인드맵</button>
-                <button onclick="loadTemplate('sequence')" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-xs font-medium text-slate-200 transition">시퀀스</button>
-                <button onclick="loadTemplate('gantt')" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-xs font-medium text-slate-200 transition">일정표(간트)</button>
+        <!-- Left Builder Pane -->
+        <div class="w-full lg:w-5/12 bg-slate-800/80 border border-slate-700/70 rounded-2xl p-5 flex flex-col shadow-2xl">
+            <div class="flex gap-2 pb-4 border-b border-slate-700/60 mb-4">
+                <button onclick="addBlock('step')" class="flex-1 py-2.5 px-3 bg-indigo-950/80 hover:bg-indigo-900/80 border border-indigo-800/60 text-indigo-300 font-bold text-xs rounded-xl transition flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-square-plus"></i>
+                    <span>일반 단계 추가</span>
+                </button>
+                <button onclick="addBlock('branch')" class="flex-1 py-2.5 px-3 bg-amber-950/80 hover:bg-amber-900/80 border border-amber-800/60 text-amber-300 font-bold text-xs rounded-xl transition flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-diamond"></i>
+                    <span>조건 분기 추가</span>
+                </button>
             </div>
-            <div class="flex items-center space-x-2">
-                <span class="text-xs text-slate-400 font-medium">테마:</span>
-                <select id="theme-select" onchange="renderDiagram()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs outline-none text-slate-200">
-                    <option value="dark">다크 (Dark)</option>
-                    <option value="default">기본 (Default)</option>
-                    <option value="neutral">모던 그레이 (Neutral)</option>
-                    <option value="forest">포레스트 (Forest)</option>
-                </select>
+
+            <!-- Block List Scrollable -->
+            <div id="blockList" class="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
+                <!-- Blocks rendered by JS -->
             </div>
         </div>
 
-        <!-- Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            <!-- Left: Text Input (5 cols) -->
-            <div class="lg:col-span-5 bg-slate-800/80 rounded-2xl border border-slate-700/70 p-5 flex flex-col justify-between shadow-2xl">
-                <div>
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-700/60 mb-3">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">다이어그램 문법 입력</span>
-                        <a href="https://mermaid.js.org/syntax/flowchart.html" target="_blank" class="text-xs text-indigo-400 hover:underline">문법 가이드 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
-                    </div>
-                    <textarea id="mermaid-code" class="w-full h-[460px] p-3.5 bg-slate-900/90 border border-slate-700/70 rounded-xl font-mono text-xs text-slate-200 focus:border-indigo-500 outline-none resize-none leading-relaxed transition"></textarea>
+        <!-- Right Preview Pane -->
+        <div class="w-full lg:w-7/12 bg-slate-800/80 border border-slate-700/70 rounded-2xl p-5 flex flex-col justify-between shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-700/60 mb-4">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">실시간 플로우차트</span>
+                <div class="flex items-center space-x-2">
+                    <button onclick="resetBlocks()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-semibold rounded-lg transition">
+                        초기화
+                    </button>
+                    <button onclick="downloadSVG()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold rounded-lg transition flex items-center space-x-1">
+                        <i class="fa-solid fa-code text-indigo-400"></i>
+                        <span>SVG</span>
+                    </button>
+                    <button onclick="downloadPNG()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition flex items-center space-x-1.5 shadow-sm">
+                        <i class="fa-solid fa-image"></i>
+                        <span>PNG 다운로드</span>
+                    </button>
                 </div>
-                <div id="error-msg" class="hidden mt-3 p-2.5 bg-rose-950/80 border border-rose-800/60 rounded-xl text-xs text-rose-300 font-mono"></div>
             </div>
 
-            <!-- Right: Preview (7 cols) -->
-            <div class="lg:col-span-7 bg-slate-800/80 rounded-2xl border border-slate-700/70 p-5 flex flex-col justify-between shadow-2xl">
-                <div class="flex-1 flex flex-col">
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-700/60 mb-3">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">실시간 미리보기</span>
-                        <button id="copy-svg-btn" class="px-2.5 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold transition flex items-center space-x-1">
-                            <i class="fa-regular fa-copy"></i>
-                            <span id="copy-btn-text">SVG 복사</span>
-                        </button>
-                    </div>
-                    <div id="preview-container" class="flex-1 bg-slate-900/90 border border-slate-700/70 rounded-xl p-6 flex items-center justify-center overflow-auto min-h-[400px]">
-                        <div id="mermaid-render" class="w-full flex justify-center"></div>
-                    </div>
-                </div>
+            <!-- Diagram Canvas -->
+            <div id="diagram" class="flex-1 bg-slate-900/90 border border-slate-700/70 rounded-xl p-6 flex items-center justify-center overflow-auto min-h-[460px]">
+                <!-- Mermaid SVG Injected Here -->
+            </div>
 
-                <div class="pt-4 border-t border-slate-700/60 mt-4 flex items-center justify-between">
-                    <span class="text-xs text-slate-500">우클릭으로도 이미지를 바로 복사할 수 있습니다.</span>
-                    <div class="flex space-x-2">
-                        <button onclick="downloadSVG()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 text-xs font-bold hover:bg-slate-700 transition flex items-center space-x-1.5">
-                            <i class="fa-solid fa-code text-indigo-400"></i>
-                            <span>SVG</span>
-                        </button>
-                        <button onclick="downloadPNG()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-sm">
-                            <i class="fa-solid fa-image"></i>
-                            <span>PNG 다운로드</span>
-                        </button>
-                    </div>
-                </div>
+            <div class="pt-3 mt-3 border-t border-slate-700/60 text-right">
+                <span class="text-[11px] text-slate-500">우클릭으로도 이미지를 바로 복사할 수 있습니다.</span>
             </div>
         </div>
 
     </main>
 
     <script>
-        const mermaidCode = document.getElementById('mermaid-code');
-        const mermaidRender = document.getElementById('mermaid-render');
-        const errorMsg = document.getElementById('error-msg');
-        const themeSelect = document.getElementById('theme-select');
-        const copySvgBtn = document.getElementById('copy-svg-btn');
-        const copyBtnText = document.getElementById('copy-btn-text');
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            themeVariables: {
+                darkMode: true,
+                background: '#0f172a',
+                primaryColor: '#1e293b',
+                primaryTextColor: '#f8fafc',
+                primaryBorderColor: '#6366f1',
+                lineColor: '#94a3b8',
+                secondaryColor: '#334155',
+                tertiaryColor: '#0f172a'
+            },
+            securityLevel: 'loose'
+        });
 
-        const templates = {
-            flowchart: `graph TD
-    A[아이디어 발견] --> B{실현 가능성}
-    B -- 높음 --> C[초경량 프로토타입 개발]
-    B -- 낮음 --> D[아이디어 재정의]
-    D --> A
-    C --> E[3초 툴 배포]
-    E --> F[사용자 피드백 & 분석]`,
+        let blocks = [
+            { id: 1, type: 'step', text: '사용자 접속', next: '' },
+            { id: 2, type: 'branch', text: '로그인 확인?', yesText: '메인 대시보드', noText: '회원가입 진행' },
+            { id: 3, type: 'step', text: '회원가입 진행', next: '메인 대시보드' },
+            { id: 4, type: 'step', text: '메인 대시보드', next: '' },
+            { id: 5, type: 'step', text: '서비스 이용 완료', next: '' }
+        ];
+        let nextId = 6;
 
-            mindmap: `mindmap
-  root((StarSign16))
-    클라이언트 도구
-      글자수 분석기
-      텍스트 중복 정리
-      차트 시각화기
-      플로우차트
-    확장 플랫폼
-      서브도메인 도구
-      모바일 PWA
-    수익화
-      클린 애드센스
-      프리미엄 툴킷`,
+        const blockListEl = document.getElementById('blockList');
+        const diagramArea = document.getElementById('diagram');
 
-            sequence: `sequenceDiagram
-    autonumber
-    actor 유저
-    participant 브라우저
-    participant MermaidJS
-    유저->>브라우저: 텍스트 다이어그램 입력
-    브라우저->>MermaidJS: 실시간 파싱 요청
-    MermaidJS-->>브라우저: 고화질 SVG 렌더링
-    브라우저->>유저: 0.1초 만에 화면 출력 및 이미지 다운로드`,
+        function renderBlocksUI() {
+            blockListEl.innerHTML = '';
+            blocks.forEach((b, idx) => {
+                const card = document.createElement('div');
+                const isStep = b.type === 'step';
+                card.className = `p-4 rounded-xl border ${isStep ? 'bg-slate-900/70 border-indigo-900/60 border-l-4 border-l-indigo-500' : 'bg-slate-900/70 border-amber-900/60 border-l-4 border-l-amber-500'} space-y-3`;
 
-            gantt: `gantt
-    title StarSign16 마이크로 툴킷 배포 로드맵
-    dateFormat  YYYY-MM-DD
-    section 핵심 유틸리티
-    텍스트 및 글자수 도구       :done,    des1, 2026-08-10, 2026-08-13
-    차트 및 다이어그램 도구     :done,    des2, 2026-08-14, 2026-08-16
-    section 플랫폼 확장
-    슬레이트 다크 테마 통합     :active,  des3, 2026-08-16, 2026-08-17
-    트래픽 분석 및 SEO 적용     :         des4, after des3, 2d`
-        };
+                if (isStep) {
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between text-xs font-bold text-indigo-400">
+                            <span>🟦 단계 (Square)</span>
+                            <button onclick="removeBlock(${idx})" class="text-slate-500 hover:text-rose-400 transition"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-400 mb-1">단계 이름</label>
+                            <input type="text" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-indigo-500" placeholder="예: 사용자 접속" value="${b.text}" oninput="updateBlock(${idx}, 'text', this.value)">
+                        </div>
+                        <div class="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700/60">
+                            <label class="block text-[10px] text-slate-400 mb-1">⬇️ 다음 연결 (비워두면 아래 단계 자동 연결)</label>
+                            <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-200 outline-none focus:border-indigo-500" placeholder="특정 단계로 점프 시 이름 입력" value="${b.next || ''}" oninput="updateBlock(${idx}, 'next', this.value)">
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between text-xs font-bold text-amber-400">
+                            <span>🔶 조건 분기 (Diamond)</span>
+                            <button onclick="removeBlock(${idx})" class="text-slate-500 hover:text-rose-400 transition"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-400 mb-1">조건 질문</label>
+                            <input type="text" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-amber-500" placeholder="예: 로그인 확인?" value="${b.text}" oninput="updateBlock(${idx}, 'text', this.value)">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 bg-slate-800/80 p-2.5 rounded-lg border border-slate-700/60">
+                            <div>
+                                <label class="block text-[10px] text-emerald-400 font-bold mb-1">🟢 예 (Yes)</label>
+                                <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-emerald-500" placeholder="이동할 단계명" value="${b.yesText || ''}" oninput="updateBlock(${idx}, 'yesText', this.value)">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-rose-400 font-bold mb-1">🔴 아니오 (No)</label>
+                                <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-rose-500" placeholder="이동할 단계명" value="${b.noText || ''}" oninput="updateBlock(${idx}, 'noText', this.value)">
+                            </div>
+                        </div>
+                    `;
+                }
+                blockListEl.appendChild(card);
+            });
 
-        function loadTemplate(type) {
-            if (templates[type]) {
-                mermaidCode.value = templates[type];
-                renderDiagram();
-            }
+            renderDiagram();
         }
 
-        let renderTimeout = null;
-        mermaidCode.addEventListener('input', () => {
-            clearTimeout(renderTimeout);
-            renderTimeout = setTimeout(renderDiagram, 300);
-        });
+        function updateBlock(index, field, value) {
+            blocks[index][field] = value;
+            renderDiagram();
+        }
+
+        function addBlock(type) {
+            if (type === 'step') {
+                blocks.push({ id: nextId++, type: 'step', text: '', next: '' });
+            } else {
+                blocks.push({ id: nextId++, type: 'branch', text: '', yesText: '', noText: '' });
+            }
+            renderBlocksUI();
+            blockListEl.scrollTop = blockListEl.scrollHeight;
+        }
+
+        function removeBlock(index) {
+            blocks.splice(index, 1);
+            renderBlocksUI();
+        }
+
+        function resetBlocks() {
+            blocks = [{ id: 1, type: 'step', text: '사용자 접속', next: '' }];
+            renderBlocksUI();
+        }
+
+        function generateMermaidCode() {
+            let nodeMap = new Map();
+            let nIdx = 1;
+            let shapes = {};
+            let edges = '';
+
+            function getId(name) {
+                if (!name) return null;
+                let clean = name.trim();
+                if (clean === '') return null;
+                if (!nodeMap.has(clean)) {
+                    nodeMap.set(clean, `N${nIdx++}`);
+                }
+                return nodeMap.get(clean);
+            }
+
+            blocks.forEach(b => {
+                let id = getId(b.text);
+                if (id) {
+                    shapes[id] = b.type === 'branch' ? `{"${b.text.trim()}"}` : `["${b.text.trim()}"]`;
+                }
+            });
+
+            blocks.forEach((b, i) => {
+                let id = getId(b.text);
+                if (!id) return;
+
+                if (b.type === 'step') {
+                    let targetName = b.next ? b.next.trim() : (i + 1 < blocks.length ? blocks[i+1].text.trim() : null);
+                    if (targetName) {
+                        let tid = getId(targetName);
+                        if (!shapes[tid]) shapes[tid] = `["${targetName}"]`;
+                        edges += `    ${id} --> ${tid}\n`;
+                    }
+                } else if (b.type === 'branch') {
+                    if (b.yesText && b.yesText.trim() !== '') {
+                        let tid = getId(b.yesText);
+                        if (!shapes[tid]) shapes[tid] = `["${b.yesText.trim()}"]`;
+                        edges += `    ${id} --예--> ${tid}\n`;
+                    }
+                    if (b.noText && b.noText.trim() !== '') {
+                        let tid = getId(b.noText);
+                        if (!shapes[tid]) shapes[tid] = `["${b.noText.trim()}"]`;
+                        edges += `    ${id} --아니오--> ${tid}\n`;
+                    }
+                }
+            });
+
+            let nodeStr = Object.keys(shapes).map(id => `    ${id}${shapes[id]}`).join('\n');
+            if (nodeStr === '') return 'graph TD\n    Empty["블록을 추가하고 이름을 입력해주세요!"]';
+
+            return `graph TD\n${nodeStr}\n${edges}`;
+        }
 
         async function renderDiagram() {
-            const code = mermaidCode.value.trim();
-            if (!code) {
-                mermaidRender.innerHTML = '';
-                errorMsg.classList.add('hidden');
-                return;
-            }
-
+            const mermaidCode = generateMermaidCode();
             try {
-                mermaid.initialize({
-                    startOnLoad: false,
-                    theme: themeSelect.value,
-                    securityLevel: 'loose'
-                });
-
+                diagramArea.innerHTML = '';
                 const id = 'mermaid-svg-' + Date.now();
-                const { svg } = await mermaid.render(id, code);
-                mermaidRender.innerHTML = svg;
-                errorMsg.classList.add('hidden');
-            } catch (err) {
-                errorMsg.innerText = '문법 오류: ' + (err.message || '다이어그램 코드를 확인하세요.');
-                errorMsg.classList.remove('hidden');
+                const { svg } = await mermaid.render(id, mermaidCode);
+                diagramArea.innerHTML = svg;
+            } catch (e) {
+                // Ignore transient syntax updates
             }
         }
 
-        copySvgBtn.addEventListener('click', async () => {
-            const svgEl = mermaidRender.querySelector('svg');
-            if (!svgEl) return;
-            await navigator.clipboard.writeText(svgEl.outerHTML);
-            copyBtnText.innerText = '복사 완료!';
-            setTimeout(() => { copyBtnText.innerText = 'SVG 복사'; }, 1500);
-        });
-
         function downloadSVG() {
-            const svgEl = mermaidRender.querySelector('svg');
-            if (!svgEl) return;
-            const blob = new Blob([svgEl.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
+            const svgElement = diagramArea.querySelector('svg');
+            if (!svgElement) return;
+            const svgData = new XMLSerializer().serializeToString(svgElement);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const svgUrl = URL.createObjectURL(svgBlob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = `diagram_${Date.now()}.svg`;
+            a.href = svgUrl;
+            a.download = `flowchart_${Date.now()}.svg`;
             a.click();
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(svgUrl);
         }
 
         function downloadPNG() {
-            const svgEl = mermaidRender.querySelector('svg');
-            if (!svgEl) return;
+            const svgElement = diagramArea.querySelector('svg');
+            if (!svgElement) return;
 
-            const svgData = new XMLSerializer().serializeToString(svgEl);
+            const svgData = new XMLSerializer().serializeToString(svgElement);
             const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
             const URLObj = window.URL || window.webkitURL || window;
             const blobURL = URLObj.createObjectURL(svgBlob);
@@ -226,12 +282,12 @@
             image.onload = () => {
                 const canvas = document.createElement('canvas');
                 const scale = 2;
-                const bbox = svgEl.getBoundingClientRect();
+                const bbox = svgElement.getBoundingClientRect();
                 canvas.width = (bbox.width || 800) * scale;
                 canvas.height = (bbox.height || 600) * scale;
 
                 const ctx = canvas.getContext('2d');
-                ctx.fillStyle = themeSelect.value === 'dark' ? '#0f172a' : '#ffffff';
+                ctx.fillStyle = '#0f172a';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.scale(scale, scale);
                 ctx.drawImage(image, 0, 0);
@@ -239,14 +295,14 @@
                 const pngURL = canvas.toDataURL('image/png');
                 const a = document.createElement('a');
                 a.href = pngURL;
-                a.download = `diagram_${Date.now()}.png`;
+                a.download = `flowchart_${Date.now()}.png`;
                 a.click();
                 URLObj.revokeObjectURL(blobURL);
             };
             image.src = blobURL;
         }
 
-        loadTemplate('flowchart');
+        window.addEventListener('DOMContentLoaded', renderBlocksUI);
     </script>
 </body>
 </html>
