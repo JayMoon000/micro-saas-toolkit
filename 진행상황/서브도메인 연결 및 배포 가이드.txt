@@ -1,0 +1,36 @@
+🚀 서브도메인 연결 및 배포 3분 세팅 가이드
+Vercel과 Cloudflare DNS를 연동하는 초간단 순서야.
+
+1. Vercel 프로젝트 생성 & 도메인 등록
+GitHub Repository 생성 후 D:\Gemini_Files\Micro_SaaS_Toolkit의 정적 파일들 푸시 (index.html, 각 툴 html 파일들)
+
+Vercel 대시보드에서 Add New... ➔ Project ➔ 해당 저장소 임포트 (Root 디렉토리 기본 정적 배포)
+
+생성된 프로젝트 설정(Settings) ➔ Domains 탭 이동
+
+도메인 입력창에 tool.starsign16.com 입력 후 Add 클릭
+
+Vercel이 제시하는 DNS 레코드 확인:
+
+Type: CNAME
+
+Name: tool
+
+Value/Target: cname.vercel-dns.com
+
+2. Cloudflare DNS 레코드 추가
+Cloudflare 대시보드 ➔ starsign16.com 도메인 선택 ➔ DNS ➔ Records
+
+Add record 클릭:
+
+Type: CNAME
+
+Name: tool
+
+Target: cname.vercel-dns.com
+
+Proxy status: Proxied (주황색 구름 켜기) (Cloudflare 보안 및 Web Analytics 활용) 또는 SSL 발급 이슈 시 잠시 DNS only 후 활성화
+
+TTL: Auto
+
+Save 클릭

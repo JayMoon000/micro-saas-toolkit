@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarSign Toolkit - 초경량 생산성 유틸리티</title>
+    <meta name="description" content="설치와 로그인 없이 3초 만에 해결하는 브라우저 기반 초슬림 웹 툴킷">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="border-b border-slate-200 bg-white/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">⚡</span>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900">StarSign Toolkit</h1>
+                    <p class="text-xs text-slate-500 font-medium">서버비 $0 · 무설치 · 노로그인 초경량 도구 모음</p>
+                </div>
+            </div>
+            <a href="https://starsign16.com" target="_blank" class="text-xs text-slate-400 hover:text-slate-600 transition">
+                starsign16.com ↗
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Cards Section -->
+    <main class="max-w-5xl mx-auto px-6 py-12 flex-1 w-full">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">실행 도구 선택</h2>
+            <p class="text-sm text-slate-600">브라우저 내에서 즉시 100% 클라이언트 연산으로 처리됩니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Tool 1: Flowchart Maker -->
+            <a href="flowchart_maker.html" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-lg transition duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition">노코드 플로우차트 메이커</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600">Active</span>
+                    </div>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        블록 조립 방식으로 텍스트 다이어그램과 순서도를 3초 만에 생성하고 이미지로 내보냅니다.
+                    </p>
+                </div>
+                <div class="mt-6 flex items-center text-xs font-semibold text-indigo-600">
+                    도구 열기 <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition"></i>
+                </div>
+            </a>
+
+            <!-- Tool 2: EPUB Maker -->
+            <a href="epub_maker.html" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-sky-400 hover:shadow-lg transition duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition">1초 전자책(EPUB) 변환기</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600">Active</span>
+                    </div>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        PDF, DOCX, TXT, MD 문서를 1초 만에 깔끔한 표준 EPUB 전자책 포맷으로 패키징합니다.
+                    </p>
+                </div>
+                <div class="mt-6 flex items-center text-xs font-semibold text-sky-600">
+                    도구 열기 <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition"></i>
+                </div>
+            </a>
+
+            <!-- Tool 3: Fast Calendar -->
+            <a href="fast_calendar.html" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-amber-400 hover:shadow-lg transition duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-regular fa-calendar-check"></i>
+                    </div>
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-amber-600 transition">자연어 퀵 캘린더 등록기</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600">Active</span>
+                    </div>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        자유로운 일상 메모나 약속 텍스트를 파싱하여 구글 캘린더에 원클릭으로 바로 등록합니다.
+                    </p>
+                </div>
+                <div class="mt-6 flex items-center text-xs font-semibold text-amber-600">
+                    도구 열기 <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition"></i>
+                </div>
+            </a>
+
+            <!-- Tool 4: Character Counter -->
+            <a href="char_counter.html" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-rose-400 hover:shadow-lg transition duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-rose-600 transition">실시간 글자수 & 바이트 분석기</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600">Active</span>
+                    </div>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        공백 포함/제외 글자수, UTF-8/EUC-KR 바이트 및 문단 수를 실시간으로 정밀 측정합니다.
+                    </p>
+                </div>
+                <div class="mt-6 flex items-center text-xs font-semibold text-rose-600">
+                    도구 열기 <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition"></i>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white py-6">
+        <div class="max-w-5xl mx-auto px-6 text-center text-xs text-slate-400">
+            © 2026 StarSign Toolkit. Zero Server Cost, Privacy Focused (Client-Side Computing).
+        </div>
+    </footer>
+
+</body>
+</html>
