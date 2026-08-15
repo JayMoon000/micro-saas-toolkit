@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="starsign-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="#0f172a"/>
+  <!-- 기하학적인 별 다각형 구조 -->
+  <polygon points="256,40 300,180 440,130 350,240 470,330 330,340 310,480 220,370 100,430 150,300 40,240 170,190" fill="none" stroke="url(#starsign-grad)" stroke-width="18" stroke-linejoin="round"/>
+  <!-- 중앙 16 텍스트 -->
+  <text x="256" y="295" font-family="system-ui, -apple-system, sans-serif" font-size="160" font-weight="900" fill="#ffffff" text-anchor="middle">16</text>
+</svg>
