@@ -1,105 +1,148 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Starsign16 글자수 & 단어수 측정기</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #f8f9fa; color: #333; padding: 20px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 800px; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    h1 { font-size: 1.3rem; color: #111; font-weight: 700; }
-    textarea { width: 100%; height: 280px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; line-height: 1.6; resize: vertical; outline: none; transition: border 0.2s; }
-    textarea:focus { border-color: #4a90e2; }
-    .btn-group { margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end; }
-    button { padding: 9px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.2s; }
-    .btn-clear { background: #ffe3e3; color: #e03131; }
-    .btn-clear:hover { background: #ffc9c9; }
-    .btn-copy { background: #e7f5ff; color: #1971c2; }
-    .btn-copy:hover { background: #d0ebff; }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 20px; }
-    .stat-card { background: #f1f3f5; padding: 15px; border-radius: 8px; text-align: center; }
-    .stat-card.highlight { background: #f8f0fc; border: 1px solid #eebefa; }
-    .stat-label { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
-    .stat-value { font-size: 1.4rem; font-weight: bold; color: #1f2937; }
-    .stat-card.highlight .stat-value { color: #9c36b5; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 한/영 글자수 및 단어수 분석기 - StarSign16 Toolkit</title>
+    <meta name="description" content="공백 포함/제외 한글 글자수, 영문 단어수, 바이트 및 원고지 매수를 실시간으로 정밀 측정합니다.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-rose-500 selection:text-white">
 
-<div class="container">
-  <div class="header">
-    <h1>📝 글자수 & 영문 단어수 측정기</h1>
-  </div>
-  
-  <textarea id="text-input" placeholder="여기에 원문을 붙여넣으세요..."></textarea>
-  
-  <div class="btn-group">
-    <button class="btn-clear" onclick="clearText()">🗑️ 내용 지우기</button>
-    <button class="btn-copy" onclick="copyText()">📋 전체 복사</button>
-  </div>
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="text-slate-400 hover:text-slate-200 transition mr-2 text-sm font-semibold flex items-center">
+                    <i class="fa-solid fa-arrow-left mr-1.5"></i> 허브로
+                </a>
+                <div class="w-8 h-8 bg-rose-950/80 text-rose-400 border border-rose-800/50 rounded-lg flex items-center justify-center text-sm">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <h1 class="text-base font-bold text-slate-50">실시간 글자수 & 단어수 분석기</h1>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-rose-950/80 text-rose-400 border border-rose-800/60">
+                100% 클라이언트 연산
+            </span>
+        </div>
+    </header>
 
-  <div class="stats-grid">
-    <div class="stat-card highlight">
-      <div class="stat-label">한글 추천 (공백 제외)</div>
-      <div class="stat-value" id="char-no-space">0자</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">공백 포함 글자수</div>
-      <div class="stat-value" id="char-with-space">0자</div>
-    </div>
-    <div class="stat-card highlight">
-      <div class="stat-label">영문 추천 (단어수)</div>
-      <div class="stat-value" id="word-count">0 words</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">200자 원고지 분량</div>
-      <div class="stat-value" id="manuscript-page">0매</div>
-    </div>
-  </div>
-</div>
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
 
-<script>
-  const input = document.getElementById('text-input');
-  
-  input.addEventListener('input', updateStats);
+        <!-- Stat Cards Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-4 flex flex-col justify-between">
+                <span class="text-xs font-medium text-slate-400">공백 포함</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <span id="stat-with-space" class="text-2xl font-black text-slate-50">0</span>
+                    <span class="text-xs text-slate-500">자</span>
+                </div>
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-4 flex flex-col justify-between">
+                <span class="text-xs font-medium text-slate-400">공백 제외</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <span id="stat-no-space" class="text-2xl font-black text-rose-400">0</span>
+                    <span class="text-xs text-slate-500">자</span>
+                </div>
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-4 flex flex-col justify-between">
+                <span class="text-xs font-medium text-slate-400">단어 수 (Word)</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <span id="stat-words" class="text-2xl font-black text-slate-50">0</span>
+                    <span class="text-xs text-slate-500">개</span>
+                </div>
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-4 flex flex-col justify-between">
+                <span class="text-xs font-medium text-slate-400">원고지 (200자)</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <span id="stat-manuscript" class="text-2xl font-black text-amber-400">0</span>
+                    <span class="text-xs text-slate-500">장</span>
+                </div>
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-4 flex flex-col justify-between">
+                <span class="text-xs font-medium text-slate-400">용량 (UTF-8)</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <span id="stat-bytes" class="text-2xl font-black text-slate-50">0</span>
+                    <span class="text-xs text-slate-500">Byte</span>
+                </div>
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-4 flex flex-col justify-between">
+                <span class="text-xs font-medium text-slate-400">줄 / 문단</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <span id="stat-lines" class="text-2xl font-black text-slate-50">0</span>
+                    <span class="text-xs text-slate-500">줄</span>
+                </div>
+            </div>
+        </div>
 
-  function updateStats() {
-    const text = input.value;
+        <!-- Textarea Editor -->
+        <div class="bg-slate-800/80 rounded-2xl border border-slate-700/70 p-5 shadow-2xl flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-700/60 mb-3">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">텍스트 실시간 입력</span>
+                <div class="flex items-center space-x-2">
+                    <button id="copy-btn" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-semibold text-slate-200 transition flex items-center space-x-1.5">
+                        <i class="fa-regular fa-clone"></i>
+                        <span id="copy-text">텍스트 복사</span>
+                    </button>
+                    <button id="clear-btn" class="px-3 py-1.5 rounded-lg bg-rose-950/50 hover:bg-rose-900/60 border border-rose-800/50 text-xs font-semibold text-rose-300 transition">
+                        비우기
+                    </button>
+                </div>
+            </div>
+            <textarea id="main-textarea" class="w-full h-[420px] p-4 bg-slate-900/90 border border-slate-700/70 rounded-xl font-mono text-sm text-slate-200 placeholder-slate-600 focus:border-rose-500 outline-none resize-none leading-relaxed transition" placeholder="분석할 글이나 원고를 입력하거나 붙여넣으세요..."></textarea>
+        </div>
 
-    // 1. 공백 포함
-    const withSpace = text.length;
+    </main>
 
-    // 2. 공백 제외
-    const noSpace = text.replace(/\s/g, '').length;
+    <script>
+        const input = document.getElementById('main-textarea');
+        const statWithSpace = document.getElementById('stat-with-space');
+        const statNoSpace = document.getElementById('stat-no-space');
+        const statWords = document.getElementById('stat-words');
+        const statManuscript = document.getElementById('stat-manuscript');
+        const statBytes = document.getElementById('stat-bytes');
+        const statLines = document.getElementById('stat-lines');
+        const copyBtn = document.getElementById('copy-btn');
+        const copyText = document.getElementById('copy-text');
+        const clearBtn = document.getElementById('clear-btn');
 
-    // 3. 영문 단어수 (자동 인식)
-    const trimmedText = text.trim();
-    const wordCount = trimmedText ? trimmedText.split(/\s+/).length : 0;
+        function analyze() {
+            const val = input.value;
+            const withSpace = val.length;
+            const noSpace = val.replace(/\s/g, '').length;
+            const words = val.trim() ? val.trim().split(/\s+/).length : 0;
+            const manuscript = Math.ceil(noSpace / 200);
+            const bytes = new TextEncoder().encode(val).length;
+            const lines = val ? val.split(/\r?\n/).length : 0;
 
-    // 4. 원고지 매수
-    const manuscript = (withSpace / 200).toFixed(1);
+            statWithSpace.innerText = withSpace.toLocaleString();
+            statNoSpace.innerText = noSpace.toLocaleString();
+            statWords.innerText = words.toLocaleString();
+            statManuscript.innerText = manuscript.toLocaleString();
+            statBytes.innerText = bytes.toLocaleString();
+            statLines.innerText = lines.toLocaleString();
+        }
 
-    document.getElementById('char-with-space').innerText = withSpace.toLocaleString() + '자';
-    document.getElementById('char-no-space').innerText = noSpace.toLocaleString() + '자';
-    document.getElementById('word-count').innerText = wordCount.toLocaleString() + ' words';
-    document.getElementById('manuscript-page').innerText = manuscript + '매';
-  }
+        input.addEventListener('input', analyze);
 
-  function clearText() {
-    input.value = '';
-    updateStats();
-    input.focus();
-  }
+        clearBtn.addEventListener('click', () => {
+            input.value = '';
+            analyze();
+            input.focus();
+        });
 
-  function copyText() {
-    if (!input.value) return;
-    input.select();
-    navigator.clipboard.writeText(input.value);
-    alert('클립보드에 복사되었습니다.');
-  }
-</script>
-
+        copyBtn.addEventListener('click', async () => {
+            if (!input.value) return;
+            await navigator.clipboard.writeText(input.value);
+            copyText.innerText = '복사 완료!';
+            setTimeout(() => { copyText.innerText = '텍스트 복사'; }, 1500);
+        });
+    </script>
 </body>
 </html>

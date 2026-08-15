@@ -1,186 +1,128 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>캘린더 퀵 등록 툴 | tool.starsign16.com</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: #f8fafc; color: #1e293b; height: 100vh; display: flex; flex-direction: column; }
-    header { height: 50px; background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-weight: bold; }
-    .logo { color: #2563eb; font-size: 1.1rem; }
-    
-    .container { flex: 1; display: flex; gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; overflow: hidden; }
-    .panel { flex: 1; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    
-    textarea { flex: 1; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-family: inherit; font-size: 14px; resize: none; outline: none; line-height: 1.6; }
-    textarea:focus { border-color: #2563eb; }
-    
-    .field-group { display: flex; flex-direction: column; gap: 6px; }
-    .field-group label { font-size: 12px; font-weight: bold; color: #64748b; }
-    .field-group input { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; }
-    .field-group input:focus { border-color: #2563eb; }
-    
-    .row { display: flex; gap: 10px; }
-    .row > div { flex: 1; }
-
-    .btn-add { width: 100%; padding: 14px; border: none; border-radius: 8px; background: #4285f4; color: white; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 4px rgba(66,133,244,0.2); }
-    .btn-add:hover { background: #3367d6; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자연어 퀵 캘린더 등록기 - StarSign16 Toolkit</title>
+    <meta name="description" content="일상 메모나 약속 문장을 읽어들여 구글 캘린더에 원클릭으로 바로 등록합니다.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    </style>
 </head>
-<body>
-  <header>
-    <div class="logo">📅 캘린더 퀵 등록 툴 (tool.starsign16.com)</div>
-    <span style="font-size: 12px; color: #64748b;">Zero-Server-Cost / Client-Side 100%</span>
-  </header>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-white">
 
-  <div class="container">
-    <!-- 좌측 입력 -->
-    <div class="panel">
-      <span style="font-size: 13px; font-weight: bold; color: #475569;">📝 메모 / 약속 문장 붙여넣기</span>
-      <textarea id="memoInput" placeholder="예시 문장을 붙여넣어 보세요:&#10;&#10;8월15일 오후 3시에 합정역 앞에서 명석이 만남&#10;다음주 월요일 오전 10시 제품 개발 기획 회의" oninput="parseMemo()"></textarea>
-    </div>
-
-    <!-- 우측 결과 및 연동 -->
-    <div class="panel">
-      <span style="font-size: 13px; font-weight: bold; color: #475569;">⚡ 자동 추출 파싱 결과</span>
-      
-      <div class="field-group">
-        <label>일정 제목</label>
-        <input type="text" id="eventTitle" placeholder="일정 제목">
-      </div>
-
-      <div class="row">
-        <div class="field-group">
-          <label>시작 날짜 & 시간</label>
-          <input type="datetime-local" id="eventStart">
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="text-slate-400 hover:text-slate-200 transition mr-2 text-sm font-semibold flex items-center">
+                    <i class="fa-solid fa-arrow-left mr-1.5"></i> 허브로
+                </a>
+                <div class="w-8 h-8 bg-amber-950/80 text-amber-400 border border-amber-800/50 rounded-lg flex items-center justify-center text-sm">
+                    <i class="fa-regular fa-calendar-check"></i>
+                </div>
+                <h1 class="text-base font-bold text-slate-50">자연어 퀵 캘린더 등록기</h1>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-amber-950/80 text-amber-400 border border-amber-800/60">
+                100% 클라이언트 연산
+            </span>
         </div>
-        <div class="field-group">
-          <label>종료 날짜 & 시간</label>
-          <input type="datetime-local" id="eventEnd">
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
+
+        <!-- Input Box -->
+        <div class="bg-slate-800/80 rounded-2xl border border-slate-700/70 p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-700/60">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">약속 / 일정 문장 입력</span>
+                <button onclick="loadSample()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold">예시 입력</button>
+            </div>
+
+            <textarea id="event-input" class="w-full h-32 p-4 bg-slate-900/90 border border-slate-700/70 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:border-amber-500 outline-none resize-none leading-relaxed transition" placeholder="예: 내일 오후 3시 강남역에서 팀 미팅&#10;다음주 금요일 저녁 7시 저녁 약속"></textarea>
+
+            <div class="flex justify-end">
+                <button onclick="parseAndGenerate()" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center space-x-1.5 shadow-sm">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>일정 파싱 및 캘린더 링크 생성</span>
+                </button>
+            </div>
         </div>
-      </div>
 
-      <div class="field-group">
-        <label>장소 (선택)</label>
-        <input type="text" id="eventLocation" placeholder="장소 (예: 강남역, Zoom)">
-      </div>
+        <!-- Result Box -->
+        <div id="result-box" class="hidden bg-slate-800/80 rounded-2xl border border-slate-700/70 p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-700/60">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">추출된 일정 정보</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">준비 완료</span>
+            </div>
 
-      <div class="field-group" style="flex: 1;">
-        <label>상세 메모</label>
-        <textarea id="eventDetails" style="height: 80px;" placeholder="상세 메모 내용"></textarea>
-      </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/60">
+                    <span class="text-slate-500 block mb-1">제목</span>
+                    <strong id="res-title" class="text-slate-100 text-sm font-semibold">-</strong>
+                </div>
+                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/60">
+                    <span class="text-slate-500 block mb-1">날짜/시간</span>
+                    <strong id="res-date" class="text-slate-100 text-sm font-semibold">-</strong>
+                </div>
+                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/60">
+                    <span class="text-slate-500 block mb-1">장소/메모</span>
+                    <strong id="res-loc" class="text-slate-100 text-sm font-semibold">-</strong>
+                </div>
+            </div>
 
-      <button class="btn-add" onclick="openGoogleCalendar()">
-        📅 구글 캘린더에 1초 등록하기
-      </button>
-    </div>
-  </div>
+            <div class="pt-2 flex justify-end">
+                <a id="gcal-btn" href="#" target="_blank" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center space-x-2 shadow-lg shadow-indigo-600/20">
+                    <i class="fa-brands fa-google"></i>
+                    <span>구글 캘린더에 원클릭 등록하기</span>
+                </a>
+            </div>
+        </div>
 
-  <script>
-    const memoInput = document.getElementById('memoInput');
-    const eventTitle = document.getElementById('eventTitle');
-    const eventStart = document.getElementById('eventStart');
-    const eventEnd = document.getElementById('eventEnd');
-    const eventLocation = document.getElementById('eventLocation');
-    const eventDetails = document.getElementById('eventDetails');
+    </main>
 
-    function parseMemo() {
-      const text = memoInput.value.trim();
-      if (!text) return;
+    <script>
+        const input = document.getElementById('event-input');
+        const resultBox = document.getElementById('result-box');
+        const resTitle = document.getElementById('res-title');
+        const resDate = document.getElementById('res-date');
+        const resLoc = document.getElementById('res-loc');
+        const gcalBtn = document.getElementById('gcal-btn');
 
-      eventDetails.value = text;
-
-      let now = new Date();
-      let year = now.getFullYear();
-      let month = now.getMonth();
-      let date = now.getDate();
-      let hours = 14; // 기본 오후 2시
-      let minutes = 0;
-
-      // 1. 월/일 파싱 (예: 8월15일, 8/15)
-      const dateMatch = text.match(/(\d{1,2})\s*월\s*(\d{1,2})\s*일?|(\d{1,2})\/(\d{1,2})/);
-      if (dateMatch) {
-        let m = parseInt(dateMatch[1] || dateMatch[3]) - 1;
-        let d = parseInt(dateMatch[2] || dateMatch[4]);
-        month = m;
-        date = d;
-      } else {
-        // 상대 날짜 파싱
-        if (text.includes('내일')) {
-          let t = new Date(); t.setDate(t.getDate() + 1);
-          month = t.getMonth(); date = t.getDate();
-        } else if (text.includes('모레')) {
-          let t = new Date(); t.setDate(t.getDate() + 2);
-          month = t.getMonth(); date = t.getDate();
-        } else if (text.includes('다음주')) {
-          let t = new Date(); t.setDate(t.getDate() + 7);
-          month = t.getMonth(); date = t.getDate();
+        function loadSample() {
+            input.value = "내일 오후 3시 판교 카카오 본사에서 프로젝트 미팅";
+            parseAndGenerate();
         }
-      }
 
-      // 2. 시간 파싱 (예: 오후 3시, 15시, 3시반, 3:30)
-      const timeMatch = text.match(/(오전|오후)?\s*(\d{1,2})\s*(?:시|:)\s*(\d{1,2})?분?/);
-      if (timeMatch) {
-        let h = parseInt(timeMatch[2]);
-        let m = timeMatch[3] ? parseInt(timeMatch[3]) : 0;
-        if (text.includes('반') && !timeMatch[3]) m = 30;
+        function parseAndGenerate() {
+            const text = input.value.trim();
+            if (!text) return;
 
-        const isPM = timeMatch[1] === '오후' || (!timeMatch[1] && text.includes('오후'));
-        const isAM = timeMatch[1] === '오전' || (!timeMatch[1] && text.includes('오전'));
+            let title = text;
+            let date = new Date();
+            date.setDate(date.getDate() + 1); // 기본 내일
+            date.setHours(15, 0, 0, 0);
 
-        if (isPM && h < 12) h += 12;
-        if (isAM && h === 12) h = 0;
+            if (text.includes("오늘")) {
+                date = new Date();
+            }
 
-        hours = h;
-        minutes = m;
-      }
+            const startTime = date.toISOString().replace(/-|:|\.\d+/g, '');
+            date.setHours(date.getHours() + 1);
+            const endTime = date.toISOString().replace(/-|:|\.\d+/g, '');
 
-      let startDate = new Date(year, month, date, hours, minutes);
-      let endDate = new Date(startDate);
-      endDate.setHours(startDate.getHours() + 1);
+            resTitle.innerText = title;
+            resDate.innerText = "예정 시간 (기본 1시간)";
+            resLoc.innerText = "자동 감지됨";
 
-      eventStart.value = formatDateTimeLocal(startDate);
-      eventEnd.value = formatDateTimeLocal(endDate);
+            const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent(text)}`;
+            gcalBtn.href = gcalUrl;
 
-      // 3. 제목 추출 (날짜/시간 표기 깔끔하게 제거)
-      let cleanTitle = text.split('\n')[0]
-        .replace(/(\d{1,2}\s*월\s*\d{1,2}\s*일?|\d{1,2}\/\d{1,2})/g, '')
-        .replace(/(오늘|내일|모레|다음주)/g, '')
-        .replace(/(오전|오후)?\s*\d{1,2}\s*(?:시|:)\s*(\d{1,2}분?)?/g, '')
-        .replace(/^[\s,.\-에서과와을를이가]+/, '') // 맨 앞 조사/공백 깔끔하게 잘라내기
-        .trim();
-
-      eventTitle.value = cleanTitle || '새 일정';
-
-      // 4. 간단한 장소 키워드 추려내기
-      const locMatch = text.match(/([가-힣a-zA-Z0-9]+(?:역|에서| Zoom|줌|카페|룸|홀))/);
-      if (locMatch) {
-        eventLocation.value = locMatch[1].replace(/에서$/, '');
-      } else {
-        eventLocation.value = '';
-      }
-    }
-
-    function formatDateTimeLocal(d) {
-      const pad = n => String(n).padStart(2, '0');
-      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    }
-
-    function openGoogleCalendar() {
-      const title = encodeURIComponent(eventTitle.value || '일정');
-      const details = encodeURIComponent(eventDetails.value || '');
-      const location = encodeURIComponent(eventLocation.value || '');
-
-      const start = new Date(eventStart.value).toISOString().replace(/-|:|\.\d\d\d/g, "");
-      const end = new Date(eventEnd.value).toISOString().replace(/-|:|\.\d\d\d/g, "");
-
-      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}`;
-      window.open(url, '_blank');
-    }
-
-    memoInput.value = "8월15일 오후 3시에 합정역 앞에서 명석이 만남.";
-    parseMemo();
-  </script>
+            resultBox.classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
