@@ -3,25 +3,22 @@
  * GA4 & Cloudflare Web Analytics 자동 이벤트 바인딩
  */
 
-// 1. GA4 측정 ID (Jay의 GA4 ID로 교체: 'G-XXXXXXXXXX')
-const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+// Google Analytics 4 (GA4) 연동
+const GA_MEASUREMENT_ID = 'G-YLJ01C9RJQ';
 
-// GA4 스크립트 동적 로드
-if (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
-    const gaScript = document.createElement('script');
-    gaScript.async = true;
-    gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(gaScript);
+// Google tag (gtag.js) 스크립트 로드
+const gaScript = document.createElement('script');
+gaScript.async = true;
+gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+document.head.appendChild(gaScript);
 
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    window.gtag = gtag;
-    gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID, {
-        send_page_view: true,
-        anonymize_ip: true
-    });
+// dataLayer 초기화 및 설정
+window.dataLayer = window.dataLayer || [];
+function gtag() {
+  dataLayer.push(arguments);
 }
+gtag('js', new Date());
+gtag('config', GA_MEASUREMENT_ID);
 
 // 2. 커스텀 액션 이벤트 로깅 함수
 function trackToolEvent(toolName, actionName) {
