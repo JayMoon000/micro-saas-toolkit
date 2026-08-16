@@ -4,7 +4,7 @@
  */
 
 // Google Analytics 4 (GA4) 연동
-const GA_MEASUREMENT_ID = 'G-YLJ01C9RJQ';
+const GA_MEASUREMENT_ID = 'G-6LFL2P1WRN';
 
 // Google tag (gtag.js) 스크립트 로드
 const gaScript = document.createElement('script');
