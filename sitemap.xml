@@ -2,44 +2,172 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://tool.starsign16.com/</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-08-23</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://tool.starsign16.com/char_counter.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://tool.starsign16.com/ko</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/word-counter</loc>
+    <lastmod>2026-08-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tool.starsign16.com/text_cleaner.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://tool.starsign16.com/ko/word-counter</loc>
+    <lastmod>2026-08-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tool.starsign16.com/flowchart_maker.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://tool.starsign16.com/text-formatter</loc>
+    <lastmod>2026-08-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tool.starsign16.com/epub_maker.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://tool.starsign16.com/ko/text-formatter</loc>
+    <lastmod>2026-08-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tool.starsign16.com/fast_calendar.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://tool.starsign16.com/lorem-generator</loc>
+    <lastmod>2026-08-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tool.starsign16.com/visualizer.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://tool.starsign16.com/ko/lorem-generator</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/markdown-previewer</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/markdown-previewer</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/image-compressor</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/image-compressor</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/background-remover</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/background-remover</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/image-resizer</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/image-resizer</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/favicon-generator</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/favicon-generator</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/json-formatter</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/json-formatter</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/base64-tool</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/base64-tool</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/regex-tester</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/regex-tester</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/url-parser</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/url-parser</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/dday-calculator</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/dday-calculator</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/discount-calc</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/discount-calc</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/qr-generator</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/qr-generator</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/loan-compound-calc</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tool.starsign16.com/ko/loan-compound-calc</loc>
+    <lastmod>2026-08-23</lastmod>
     <priority>0.8</priority>
   </url>
 </urlset>
