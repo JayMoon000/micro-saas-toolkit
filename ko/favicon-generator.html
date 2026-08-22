@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>파비콘 & 앱 아이콘 세트 생성기 - StarSign16 툴킷</title>
+  <meta name="description" content="사진 1장으로 웹 표준 파비콘과 모바일 앱 터치 아이콘 세트를 일괄 생성합니다. 100% 브라우저 연산.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 툴킷 허브</a>
+      <div class="flex items-center gap-3">
+        <a href="../favicon-generator.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">English</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">이미지 & 미디어</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">파비콘 & 앱 아이콘 세트 생성기</h1>
+      <p class="text-xs text-slate-400">이미지 1장으로 16x16 탭 아이콘부터 512x512 PWA 아이콘까지 원클릭으로 추출합니다.</p>
+    </div>
+
+    <div
+      id="dropZone"
+      onclick="document.getElementById('fileInput').click()"
+      class="border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-slate-950/60 rounded-xl p-8 text-center cursor-pointer transition mb-6"
+    >
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+      <div class="text-3xl mb-2">⭐</div>
+      <p class="text-sm font-semibold text-slate-200 mb-1">아이콘으로 만들 이미지를 업로드하세요 (정사각형 권장)</p>
+      <p class="text-xs text-slate-500">PNG, JPG, WebP, SVG 지원 (서버 업로드 없음)</p>
+    </div>
+
+    <div id="workspace" class="hidden space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="iconGrid"></div>
+
+      <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-xs font-semibold text-slate-400">HTML 메타 태그 스니펫</span>
+          <button onclick="copyMetaTags()" id="copyMetaBtn" class="text-xs text-cyan-400 hover:underline">태그 복사</button>
+        </div>
+        <pre class="bg-slate-900 p-3 rounded text-[11px] font-mono text-slate-300 overflow-x-auto leading-relaxed" id="metaSnippet">&lt;link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"&gt;
+&lt;link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"&gt;
+&lt;link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"&gt;</pre>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>StarSign16 생태계. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">메인 허브</a></p>
+  </footer>
+
+  <script>
+    const SIZES = [
+      { name: 'favicon-16x16.png', size: 16, desc: '브라우저 탭 기본 아이콘' },
+      { name: 'favicon-32x32.png', size: 32, desc: '데스크톱 고해상도 파비콘' },
+      { name: 'favicon-48x48.png', size: 48, desc: '윈도우 바로가기 아이콘' },
+      { name: 'apple-touch-icon.png', size: 180, desc: 'iOS 아이폰 홈 화면 아이콘' },
+      { name: 'android-chrome-192.png', size: 192, desc: '안드로이드 웹 앱 아이콘' },
+      { name: 'android-chrome-512.png', size: 512, desc: 'PWA 스플래시 대형 아이콘' }
+    ];
+
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const workspace = document.getElementById('workspace');
+    const iconGrid = document.getElementById('iconGrid');
+
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-cyan-500'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-cyan-500'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-cyan-500');
+      if (e.dataTransfer.files.length) generateIcons(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) generateIcons(e.target.files[0]);
+    });
+
+    function generateIcons(file) {
+      if (!file.type.startsWith('image/')) return alert('유효한 이미지 파일을 업로드해 주세요.');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          iconGrid.innerHTML = '';
+          SIZES.forEach(item => {
+            const canvas = document.createElement('canvas');
+            canvas.width = item.size;
+            canvas.height = item.size;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, item.size, item.size);
+
+            const dataUrl = canvas.toDataURL('image/png');
+
+            const card = document.createElement('div');
+            card.className = 'bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col items-center text-center';
+            card.innerHTML = `
+              <div class="w-16 h-16 bg-slate-900 rounded-lg flex items-center justify-center p-2 mb-3 border border-slate-800">
+                <img src="${dataUrl}" class="max-h-full max-w-full object-contain" />
+              </div>
+              <span class="text-xs font-bold text-white mb-0.5">${item.size}x${item.size}</span>
+              <span class="text-[10px] text-slate-500 mb-3">${item.desc}</span>
+              <a href="${dataUrl}" download="${item.name}" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded text-xs font-semibold transition border border-slate-700">
+                PNG 다운로드
+              </a>
+            `;
+            iconGrid.appendChild(card);
+          });
+          workspace.classList.remove('hidden');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function copyMetaTags() {
+      const code = document.getElementById('metaSnippet').innerText;
+      navigator.clipboard.writeText(code);
+      const btn = document.getElementById('copyMetaBtn');
+      btn.innerText = '복사완료!';
+      setTimeout(() => btn.innerText = '태그 복사', 1500);
+    }
+  </script>
+</body>
+</html>

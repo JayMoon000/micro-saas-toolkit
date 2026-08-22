@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Tester & Matcher - StarSign16 Toolkit</title>
+  <meta name="description" content="Test regular expressions in real-time with instant match highlighting. 100% private and client-side.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .match-tag {
+      background-color: rgba(6, 182, 212, 0.35);
+      border-bottom: 2px solid #06b6d4;
+      border-radius: 2px;
+      color: #f8fafc;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 Toolkit Hub</a>
+      <div class="flex items-center gap-3">
+        <a href="ko/regex-tester.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">Korean</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full flex flex-col">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Dev & Data</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">Regular Expression (Regex) Tester</h1>
+      <p class="text-xs text-slate-400">Validate regular expressions and visualize text matches in real-time. Zero server uploads.</p>
+    </div>
+
+    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl mb-4 space-y-4">
+      <div>
+        <label class="text-xs font-semibold text-slate-400 block mb-1.5">Regular Expression Pattern</label>
+        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3 focus-within:border-cyan-500">
+          <span class="text-slate-500 font-mono text-base select-none">/</span>
+          <input type="text" id="regexPattern" placeholder="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" class="flex-1 bg-transparent px-2 py-2.5 text-sm text-cyan-300 font-mono focus:outline-none" />
+          <span class="text-slate-500 font-mono text-base select-none">/</span>
+          <input type="text" id="regexFlags" value="gm" placeholder="flags" class="w-14 bg-transparent px-2 py-2.5 text-xs text-slate-300 font-mono focus:outline-none" />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <span class="text-slate-500">Presets:</span>
+        <button onclick="applyPreset('email')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">Email</button>
+        <button onclick="applyPreset('url')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">URL</button>
+        <button onclick="applyPreset('phone')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">Phone Number</button>
+        <button onclick="applyPreset('numbers')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">Digits Only</button>
+        <button onclick="applyPreset('date')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">Date (YYYY-MM-DD)</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 mb-4">
+      <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden flex flex-col">
+        <div class="px-4 py-2 bg-slate-900/80 border-b border-slate-800 text-xs font-semibold text-slate-400 flex justify-between">
+          <span>Test String</span>
+          <span id="matchStats" class="text-cyan-400 font-mono">0 matches</span>
+        </div>
+        <textarea id="testText" placeholder="Paste or type test string here..." class="w-full p-4 bg-transparent text-sm text-slate-200 focus:outline-none font-mono leading-relaxed resize-y h-64 md:h-full"></textarea>
+      </div>
+
+      <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden flex flex-col">
+        <div class="px-4 py-2 bg-slate-900/80 border-b border-slate-800 text-xs font-semibold text-cyan-400">
+          <span>Match Highlight</span>
+        </div>
+        <div id="highlightOutput" class="p-4 bg-transparent text-sm text-slate-300 font-mono leading-relaxed overflow-y-auto whitespace-pre-wrap break-all h-64 md:h-full flex-1"></div>
+      </div>
+    </div>
+
+    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-xs font-semibold text-slate-400">Captured Match Details</span>
+        <button onclick="copyMatches()" id="copyMatchesBtn" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded text-xs font-medium transition border border-slate-700">Copy Extracted List</button>
+      </div>
+      <div id="matchList" class="space-y-1.5 max-h-36 overflow-y-auto text-xs font-mono text-slate-300">
+        <span class="text-slate-500 italic">No matches found.</span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Part of the StarSign16 Ecosystem. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">Main Hub</a></p>
+  </footer>
+
+  <script>
+    const regexPattern = document.getElementById('regexPattern');
+    const regexFlags = document.getElementById('regexFlags');
+    const testText = document.getElementById('testText');
+    const highlightOutput = document.getElementById('highlightOutput');
+    const matchStats = document.getElementById('matchStats');
+    const matchList = document.getElementById('matchList');
+    const copyMatchesBtn = document.getElementById('copyMatchesBtn');
+
+    let latestMatches = [];
+
+    const PRESETS = {
+      email: { pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', flags: 'gm', sample: 'Contact us at hello@starsign16.com or support@google.com for assistance.' },
+      url: { pattern: 'https?:\\/\\/[\\w\\-\\.]+(?::\\d+)?(?:\\/[\\w\\/_\\.]*)?(?:\\?[\\w=&%\\-]*)?', flags: 'gm', sample: 'Visit https://starsign16.com or check out https://tool.starsign16.com/ko/ today!' },
+      phone: { pattern: '\\b\\d{2,3}[-.]?\\d{3,4}[-.]?\\d{4}\\b', flags: 'gm', sample: 'Call 010-1234-5678, 02-987-6543 or 031.555.7788 immediately.' },
+      numbers: { pattern: '\\b\\d+\\b', flags: 'gm', sample: 'Order #1024 contains 16 items totaling $250 with 0 extra tax.' },
+      date: { pattern: '\\b\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])\\b', flags: 'gm', sample: 'Release date is 2026-08-23 and the next update is planned for 2026-09-01.' }
+    };
+
+    function applyPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      regexPattern.value = p.pattern;
+      regexFlags.value = p.flags;
+      testText.value = p.sample;
+      runRegex();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function runRegex() {
+      const pat = regexPattern.value;
+      const flags = regexFlags.value;
+      const text = testText.value;
+
+      if (!pat || !text) {
+        highlightOutput.innerHTML = escapeHtml(text);
+        matchStats.innerText = '0 matches';
+        matchList.innerHTML = '<span class="text-slate-500 italic">No matches found.</span>';
+        latestMatches = [];
+        return;
+      }
+
+      try {
+        const regex = new RegExp(pat, flags);
+        const matches = [...text.matchAll(new RegExp(pat, flags.includes('g') ? flags : flags + 'g'))];
+        latestMatches = matches.map(m => m[0]);
+        matchStats.innerText = `${matches.length} match${matches.length === 1 ? '' : 'es'}`;
+
+        if (matches.length === 0) {
+          highlightOutput.innerHTML = escapeHtml(text);
+          matchList.innerHTML = '<span class="text-slate-500 italic">No matches found.</span>';
+          return;
+        }
+
+        let highlighted = '';
+        let lastIndex = 0;
+        let matchItemsHtml = '';
+
+        matches.forEach((m, idx) => {
+          const matchStart = m.index;
+          const matchEnd = matchStart + m[0].length;
+          highlighted += escapeHtml(text.substring(lastIndex, matchStart));
+          highlighted += `<mark class="match-tag">${escapeHtml(m[0])}</mark>`;
+          lastIndex = matchEnd;
+
+          matchItemsHtml += `<div class="p-1.5 bg-slate-900 rounded border border-slate-800 flex justify-between">
+            <span class="text-cyan-300">#${idx + 1}: ${escapeHtml(m[0])}</span>
+            <span class="text-slate-500">Index [${matchStart}:${matchEnd}]</span>
+          </div>`;
+        });
+
+        highlighted += escapeHtml(text.substring(lastIndex));
+        highlightOutput.innerHTML = highlighted;
+        matchList.innerHTML = matchItemsHtml;
+      } catch (err) {
+        matchStats.innerText = 'Invalid Regex';
+        highlightOutput.innerHTML = `<span class="text-rose-400">⚠️ Syntax Error: ${err.message}</span>`;
+        matchList.innerHTML = '<span class="text-rose-400 italic">Check pattern and flags syntax.</span>';
+        latestMatches = [];
+      }
+    }
+
+    function copyMatches() {
+      if (latestMatches.length === 0) return;
+      navigator.clipboard.writeText(latestMatches.join('\n'));
+      copyMatchesBtn.innerText = 'Copied List!';
+      setTimeout(() => copyMatchesBtn.innerText = 'Copy Extracted List', 1500);
+    }
+
+    regexPattern.addEventListener('input', runRegex);
+    regexFlags.addEventListener('input', runRegex);
+    testText.addEventListener('input', runRegex);
+
+    applyPreset('email');
+  </script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Background Remover - StarSign16 Toolkit</title>
+  <meta name="description" content="High-precision AI background removal running 100% locally in your browser. Zero server uploads.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .checkerboard {
+      background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%), 
+                        linear-gradient(-45deg, #1e293b 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #1e293b 75%), 
+                        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 Toolkit Hub</a>
+      <div class="flex items-center gap-3">
+        <a href="ko/background-remover.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">Korean</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Image & Media</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">AI Background Remover</h1>
+      <p class="text-xs text-slate-400">Universal high-precision background removal. 100% on-device client processing.</p>
+    </div>
+
+    <div
+      id="dropZone"
+      onclick="document.getElementById('fileInput').click()"
+      class="border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-slate-950/60 rounded-xl p-8 text-center cursor-pointer transition mb-6"
+    >
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+      <div class="text-3xl mb-2">✂️</div>
+      <p class="text-sm font-semibold text-slate-200 mb-1">Click or drag & drop an image to cut out</p>
+      <p class="text-xs text-slate-500">Supports full-body portraits, objects, and animals (Zero server uploads)</p>
+    </div>
+
+    <div id="loadingState" class="hidden bg-slate-950 border border-slate-800 p-8 rounded-xl text-center mb-6">
+      <div class="inline-block animate-spin text-2xl mb-3">⚙️</div>
+      <p class="text-sm font-semibold text-cyan-400 mb-1" id="loadingText">Initializing AI model...</p>
+      <p class="text-xs text-slate-500">First run caches ~25MB model into browser memory for instant future runs.</p>
+    </div>
+
+    <div id="workspace" class="hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col items-center">
+          <span class="text-xs font-semibold text-slate-400 mb-3 self-start">Original Image</span>
+          <div class="w-full h-64 flex items-center justify-center bg-slate-900/50 rounded-lg overflow-hidden p-2">
+            <img id="origImg" class="max-h-full max-w-full object-contain rounded" alt="Original" />
+          </div>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col items-center">
+          <span class="text-xs font-semibold text-cyan-400 mb-3 self-start">Cutout (Transparent PNG)</span>
+          <div class="w-full h-64 flex items-center justify-center checkerboard rounded-lg overflow-hidden p-2">
+            <img id="resultImg" class="max-h-full max-w-full object-contain" alt="Cutout" />
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button onclick="resetWorkspace()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition">
+          Process Another Image
+        </button>
+        <a id="downloadBtn" download="starsign16-cutout.png" class="px-8 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold text-center transition">
+          Download Transparent PNG
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Part of the StarSign16 Ecosystem. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">Main Hub</a></p>
+  </footer>
+
+  <script type="module">
+    import { AutoModel, AutoProcessor, RawImage, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+    
+    env.allowLocalModels = false;
+    env.backends.onnx.wasm.numThreads = 1;
+
+    let model = null;
+    let processor = null;
+
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const loadingState = document.getElementById('loadingState');
+    const loadingText = document.getElementById('loadingText');
+    const workspace = document.getElementById('workspace');
+    const origImg = document.getElementById('origImg');
+    const resultImg = document.getElementById('resultImg');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    window.resetWorkspace = function() {
+      fileInput.value = '';
+      workspace.classList.add('hidden');
+      loadingState.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+    };
+
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-cyan-500'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-cyan-500'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-cyan-500');
+      if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) processFile(e.target.files[0]);
+    });
+
+    async function processFile(file) {
+      if (!file.type.startsWith('image/')) return alert('Please upload a valid image file.');
+
+      const imgUrl = URL.createObjectURL(file);
+      origImg.src = imgUrl;
+      dropZone.classList.add('hidden');
+      workspace.classList.add('hidden');
+      loadingState.classList.remove('hidden');
+
+      try {
+        if (!model || !processor) {
+          loadingText.innerText = 'Loading RMBG High-Precision AI Model...';
+          const model_id = 'briaai/RMBG-1.4';
+          model = await AutoModel.from_pretrained(model_id, { quantized: true });
+          processor = await AutoProcessor.from_pretrained(model_id);
+        }
+
+        loadingText.innerText = 'Extracting full-body & background...';
+
+        const image = await RawImage.fromURL(imgUrl);
+        const { pixel_values } = await processor(image);
+
+        const { output } = await model({ input: pixel_values });
+        const mask = await RawImage.fromTensor(output[0].mul(255).to('uint8')).resize(image.width, image.height);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext('2d');
+
+        const rawCanvas = image.toCanvas();
+        ctx.drawImage(rawCanvas, 0, 0);
+
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const maskData = mask.data;
+
+        for (let i = 0; i < maskData.length; i++) {
+          imgData.data[4 * i + 3] = maskData[i];
+        }
+        ctx.putImageData(imgData, 0, 0);
+
+        const outUrl = canvas.toDataURL('image/png');
+        resultImg.src = outUrl;
+        downloadBtn.href = outUrl;
+
+        loadingState.classList.add('hidden');
+        workspace.classList.remove('hidden');
+      } catch (err) {
+        console.error(err);
+        alert('Failed to process image locally. Please try a standard PNG/JPG.');
+        window.resetWorkspace();
+      }
+    }
+  </script>
+</body>
+</html>

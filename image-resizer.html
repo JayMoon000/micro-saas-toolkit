@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Resizer & Dimensions - StarSign16 Toolkit</title>
+  <meta name="description" content="Quickly resize images by dimensions (px) or percentage (%) with aspect ratio lock. 100% client-side.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 Toolkit Hub</a>
+      <div class="flex items-center gap-3">
+        <a href="ko/image-resizer.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">Korean</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Image & Media</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">Image Resizer</h1>
+      <p class="text-xs text-slate-400">Change image dimensions or scale percentage without quality loss. Zero server uploads.</p>
+    </div>
+
+    <div
+      id="dropZone"
+      onclick="document.getElementById('fileInput').click()"
+      class="border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-slate-950/60 rounded-xl p-8 text-center cursor-pointer transition mb-6"
+    >
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+      <div class="text-3xl mb-2">📐</div>
+      <p class="text-sm font-semibold text-slate-200 mb-1">Click or drag & drop an image to resize</p>
+      <p class="text-xs text-slate-500">Supports PNG, JPG, WebP (Runs 100% locally)</p>
+    </div>
+
+    <div id="workspace" class="hidden space-y-6">
+      <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Width (px)</label>
+            <input type="number" id="widthInput" class="w-full p-2 bg-slate-900 border border-slate-800 rounded text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Height (px)</label>
+            <input type="number" id="heightInput" class="w-full p-2 bg-slate-900 border border-slate-800 rounded text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+          </div>
+          <div class="flex items-end">
+            <label class="flex items-center gap-2 p-2 bg-slate-900 border border-slate-800 rounded cursor-pointer text-xs text-slate-300 w-full">
+              <input type="checkbox" id="lockAspect" checked class="rounded bg-slate-800 border-slate-700 text-cyan-500 focus:ring-0" />
+              <span>Lock Aspect Ratio</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs">
+          <span class="text-slate-500">Presets:</span>
+          <button onclick="applyPreset(0.25)" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300">25%</button>
+          <button onclick="applyPreset(0.50)" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300">50%</button>
+          <button onclick="applyPreset(0.75)" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300">75%</button>
+          <button onclick="applyPreset(1.0)" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300">100%</button>
+        </div>
+      </div>
+
+      <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col items-center">
+        <div class="text-xs text-slate-400 mb-3 flex gap-4">
+          <span>Target Resolution: <strong id="resStats" class="text-cyan-400 font-mono">0 x 0</strong></span>
+        </div>
+        <div class="w-full h-80 bg-slate-900/50 rounded-lg mb-4 flex items-center justify-center p-4 border border-slate-800/80 overflow-hidden">
+          <canvas id="previewCanvas" class="rounded shadow transition-all duration-200 origin-center"></canvas>
+        </div>
+        <a id="downloadBtn" download="resized-image.png" class="px-8 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold text-center transition cursor-pointer">
+          Download Resized Image
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Part of the StarSign16 Ecosystem. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">Main Hub</a></p>
+  </footer>
+
+  <script>
+    let originalImg = null;
+    let aspectRatio = 1;
+
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const workspace = document.getElementById('workspace');
+    const widthInput = document.getElementById('widthInput');
+    const heightInput = document.getElementById('heightInput');
+    const lockAspect = document.getElementById('lockAspect');
+    const previewCanvas = document.getElementById('previewCanvas');
+    const resStats = document.getElementById('resStats');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-cyan-500'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-cyan-500'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-cyan-500');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) handleFile(e.target.files[0]);
+    });
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) return alert('Please upload an image.');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          originalImg = img;
+          aspectRatio = img.width / img.height;
+          widthInput.value = img.width;
+          heightInput.value = img.height;
+          workspace.classList.remove('hidden');
+          renderCanvas();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    widthInput.addEventListener('input', () => {
+      if (lockAspect.checked && originalImg) {
+        heightInput.value = Math.round(widthInput.value / aspectRatio);
+      }
+      renderCanvas();
+    });
+
+    heightInput.addEventListener('input', () => {
+      if (lockAspect.checked && originalImg) {
+        widthInput.value = Math.round(heightInput.value * aspectRatio);
+      }
+      renderCanvas();
+    });
+
+    function applyPreset(scale) {
+      if (!originalImg) return;
+      widthInput.value = Math.round(originalImg.width * scale);
+      heightInput.value = Math.round(originalImg.height * scale);
+      renderCanvas();
+    }
+
+    function renderCanvas() {
+      if (!originalImg) return;
+      const targetW = parseInt(widthInput.value) || 1;
+      const targetH = parseInt(heightInput.value) || 1;
+
+      previewCanvas.width = targetW;
+      previewCanvas.height = targetH;
+      const ctx = previewCanvas.getContext('2d');
+      ctx.drawImage(originalImg, 0, 0, targetW, targetH);
+
+      const scaleRatio = targetW / originalImg.width;
+      const baseDisplayMax = 260;
+      
+      let baseW, baseH;
+      if (aspectRatio >= 1) {
+        baseW = baseDisplayMax;
+        baseH = baseDisplayMax / aspectRatio;
+      } else {
+        baseH = baseDisplayMax;
+        baseW = baseDisplayMax * aspectRatio;
+      }
+
+      previewCanvas.style.width = `${Math.max(20, Math.round(baseW * scaleRatio))}px`;
+      previewCanvas.style.height = `${Math.max(20, Math.round(baseH * scaleRatio))}px`;
+
+      resStats.innerText = `${targetW} x ${targetH} px`;
+      downloadBtn.href = previewCanvas.toDataURL('image/png');
+    }
+  </script>
+</body>
+</html>

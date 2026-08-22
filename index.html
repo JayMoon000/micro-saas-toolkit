@@ -1,233 +1,282 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarSign16 Toolkit - 초간단 무료 웹 도구 모음</title>
-    <meta name="description" content="로그인이나 설치 없이 바로 쓰는 6가지 무료 웹 툴킷. 텍스트 정리, 차트 시각화, 전자책 변환을 브라우저에서 안전하게 실행하세요.">
-    <meta name="keywords" content="무료 웹툴, 글자수 세기, 텍스트 중복제거, 노코드 순서도, EPUB 변환기, 구글 캘린더 빠른등록, 데이터 차트 생성기">
-    <meta name="author" content="StarSign16">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://tool.starsign16.com/">
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tool.starsign16.com/">
-    <meta property="og:title" content="StarSign16 Toolkit - 초경량 무료 웹 도구 모음">
-    <meta property="og:description" content="로그인과 설치 없는 6가지 고성능 웹 유틸리티. 브라우저에서 100% 안전하게 실행됩니다.">
-    <meta property="og:image" content="https://tool.starsign16.com/og-image.jpg">
-
-    <!-- Favicon & Analytics -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="alternate icon" type="image/png" href="favicon.png">
-    <script src="analytics.js" defer></script>
-	<meta name="naver-site-verification" content="d37470492bcf7537239015a4ba52a7b063e935e6" />
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StarSign16 Micro Toolkit - 100% Free & Client-Side Utilities</title>
+  <meta name="description" content="16 ultra-fast, serverless, and privacy-first web tools for developers, creators, and everyday productivity. 100% free with zero data uploads.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tool-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tool-card:hover {
+      transform: translateY(-2px);
+      border-color: #06b6d4;
+    }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
 
-    <!-- Global Header -->
-    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <img src="favicon.svg" alt="StarSign16 Logo" class="w-9 h-9 rounded-xl shadow-xs object-contain bg-slate-800 p-1 border border-slate-700" onerror="this.src='favicon.png'">
-                <div>
-                    <h1 class="text-base font-bold text-slate-50 tracking-tight leading-none">StarSign16 Toolkit</h1>
-                    <p class="text-[11px] text-slate-400 mt-0.5">설치와 로그인 없이 바로 쓰는 초간단 도구 모음</p>
-                </div>
-            </div>
-            <a href="https://starsign16.com" target="_blank" class="text-xs font-semibold text-slate-400 hover:text-indigo-400 transition flex items-center space-x-1">
-                <span>starsign16.com</span>
-                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-            </a>
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">⚡</span>
+        <a href="index.html" class="font-extrabold text-white tracking-tight text-lg">StarSign16 <span class="text-cyan-400 font-medium">Toolkit</span></a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="ko/index.html" class="px-3 py-1.5 text-xs font-semibold bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700 text-cyan-400 transition">
+          Korean
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-6xl mx-auto px-4 pt-12 pb-8 w-full text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-medium mb-4">
+      <span>🛡️ 100% Client-Side</span>
+      <span>•</span>
+      <span>Zero Server Uploads</span>
+      <span>•</span>
+      <span>No Sign-up Required</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+      Instant Micro Utilities for High Performance
+    </h1>
+    <p class="text-sm text-slate-400 max-w-xl mx-auto mb-8">
+      Privacy-first utilities running entirely inside your browser. High speed, zero server costs, and instant results.
+    </p>
+
+    <!-- Search & Filter Bar -->
+    <div class="max-w-xl mx-auto relative mb-6">
+      <input
+        type="text"
+        id="toolSearch"
+        placeholder="Search tools (e.g. compress, json, qr, margin, count)..."
+        class="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-cyan-500 transition shadow-inner font-mono"
+      />
+      <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
+    </div>
+
+    <!-- Category Filter Chips -->
+    <div class="flex flex-wrap items-center justify-center gap-2 text-xs">
+      <button onclick="filterCategory('all')" id="btn-all" class="px-3.5 py-1.5 rounded-lg bg-cyan-600 text-white font-bold transition">All (16)</button>
+      <button onclick="filterCategory('content')" id="btn-content" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Text & Content</button>
+      <button onclick="filterCategory('image')" id="btn-image" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Image & Media</button>
+      <button onclick="filterCategory('dev')" id="btn-dev" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Dev & Data</button>
+      <button onclick="filterCategory('biz')" id="btn-biz" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Life & Business</button>
+    </div>
+  </section>
+
+  <!-- Tools Grid -->
+  <main class="flex-1 max-w-6xl mx-auto px-4 pb-16 w-full">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="toolsGrid">
+      
+      <!-- Category 1: Text & Content -->
+      <a href="word-counter.html" data-cat="content" data-keywords="character word count byte spaces" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">📝</div>
+          <h2 class="text-sm font-bold text-white mb-1">Word & Character Counter</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Real-time word, character, byte, and reading time counter with live undo.</p>
         </div>
-    </header>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Text & Content →</span>
+      </a>
 
-    <!-- Main Container -->
-    <main class="max-w-6xl mx-auto px-6 py-10 flex-1 w-full space-y-8">
-
-        <!-- Hero Section -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-slate-800">
-            <div>
-                <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-950/70 px-2.5 py-1 rounded-md border border-indigo-800/60">Easy & Fast Utilities</span>
-                <h2 class="text-2xl font-black text-slate-50 mt-2 tracking-tight">필요한 도구를 선택하세요</h2>
-                <p class="text-xs text-slate-400 mt-1">내 브라우저에서 즉시 처리되어 개인 데이터가 외부에 저장되지 않고 안전합니다.</p>
-            </div>
-            <!-- Quick Filter Tabs -->
-            <div class="flex items-center space-x-1 bg-slate-800 p-1 rounded-xl text-xs font-semibold select-none self-start md:self-auto border border-slate-700/60">
-                <button onclick="filterTools('all')" id="tab-all" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow-xs transition">전체 (6)</button>
-                <button onclick="filterTools('text')" id="tab-text" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition">텍스트/문서</button>
-                <button onclick="filterTools('visual')" id="tab-visual" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition">시각화/차트</button>
-                <button onclick="filterTools('productivity')" id="tab-productivity" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition">생산성</button>
-            </div>
+      <a href="text-formatter.html" data-cat="content" data-keywords="case convert slug remove spaces uppercase lowercase" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">🔤</div>
+          <h2 class="text-sm font-bold text-white mb-1">Text Case & Formatter</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Convert cases (UPPER, lower, Title), generate URL slugs, and clean line breaks.</p>
         </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Text & Content →</span>
+      </a>
 
-        <!-- 6 Tools Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <!-- Tool 1: 노코드 플로우차트 메이커 -->
-            <a href="flowchart_maker.html" data-category="visual" class="tool-card group bg-slate-800/80 rounded-2xl p-6 border border-slate-700/70 hover:border-indigo-500 hover:bg-slate-800 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-indigo-950/80 text-indigo-400 border border-indigo-800/50 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-diagram-project"></i>
-                        </div>
-                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">Active</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-100 group-hover:text-indigo-400 transition">노코드 플로우차트 메이커</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                        블록 조립 방식으로 텍스트 다이어그램과 순서도를 3초 만에 생성하고 이미지로 내보냅니다.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-700/60 flex items-center justify-between text-xs font-bold text-indigo-400 group-hover:text-indigo-300">
-                    <span>도구 열기</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
-                </div>
-            </a>
-
-            <!-- Tool 2: 1초 전자책(EPUB) 변환기 -->
-            <a href="epub_maker.html" data-category="text" class="tool-card group bg-slate-800/80 rounded-2xl p-6 border border-slate-700/70 hover:border-sky-500 hover:bg-slate-800 hover:shadow-2xl hover:shadow-sky-500/10 hover:-translate-y-1 transition-all flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-sky-950/80 text-sky-400 border border-sky-800/50 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">Active</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-100 group-hover:text-sky-400 transition">1초 전자책(EPUB) 변환기</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                        PDF, DOCX, TXT, MD 문서를 1초 만에 깔끔한 표준 EPUB 전자책 포맷으로 패키징합니다.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-700/60 flex items-center justify-between text-xs font-bold text-sky-400 group-hover:text-sky-300">
-                    <span>도구 열기</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
-                </div>
-            </a>
-
-            <!-- Tool 3: 자연어 퀵 캘린더 등록기 -->
-            <a href="fast_calendar.html" data-category="productivity" class="tool-card group bg-slate-800/80 rounded-2xl p-6 border border-slate-700/70 hover:border-amber-500 hover:bg-slate-800 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-amber-950/80 text-amber-400 border border-amber-800/50 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                            <i class="fa-regular fa-calendar-check"></i>
-                        </div>
-                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">Active</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-100 group-hover:text-amber-400 transition">자연어 퀵 캘린더 등록기</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                        자유로운 일상 메모나 약속 텍스트를 읽어들여 구글 캘린더에 원클릭으로 바로 등록합니다.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-700/60 flex items-center justify-between text-xs font-bold text-amber-400 group-hover:text-amber-300">
-                    <span>도구 열기</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
-                </div>
-            </a>
-
-            <!-- Tool 4: 실시간 한/영 글자수 및 단어수 분석기 -->
-            <a href="char_counter.html" data-category="text" class="tool-card group bg-slate-800/80 rounded-2xl p-6 border border-slate-700/70 hover:border-rose-500 hover:bg-slate-800 hover:shadow-2xl hover:shadow-rose-500/10 hover:-translate-y-1 transition-all flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-rose-950/80 text-rose-400 border border-rose-800/50 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-calculator"></i>
-                        </div>
-                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">Active</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-100 group-hover:text-rose-400 transition">실시간 한/영 글자수 및 단어수 분석기</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                        공백 포함/제외 한글 글자수, 영문 단어수, 원고지 매수를 실시간으로 측정합니다.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-700/60 flex items-center justify-between text-xs font-bold text-rose-400 group-hover:text-rose-300">
-                    <span>도구 열기</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
-                </div>
-            </a>
-
-            <!-- Tool 5: 텍스트 중복 제거 & 정렬기 -->
-            <a href="text_cleaner.html" data-category="text" class="tool-card group bg-slate-800/80 rounded-2xl p-6 border border-slate-700/70 hover:border-violet-500 hover:bg-slate-800 hover:shadow-2xl hover:shadow-violet-500/10 hover:-translate-y-1 transition-all flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-violet-950/80 text-violet-400 border border-violet-800/50 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-broom"></i>
-                        </div>
-                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">Active</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-100 group-hover:text-violet-400 transition">텍스트 중복 제거 & 정렬기</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                        엑셀보다 편리하게 대량의 키워드, 이메일, 리스트 데이터의 중복을 0.1초 만에 싹 제거하고 정렬합니다.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-700/60 flex items-center justify-between text-xs font-bold text-violet-400 group-hover:text-violet-300">
-                    <span>도구 열기</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
-                </div>
-            </a>
-
-            <!-- Tool 6: 3초 파스텔 차트 시각화기 -->
-            <a href="visualizer.html" data-category="visual" class="tool-card group bg-slate-800/80 rounded-2xl p-6 border border-slate-700/70 hover:border-emerald-500 hover:bg-slate-800 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-emerald-950/80 text-emerald-400 border border-emerald-800/50 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-chart-pie"></i>
-                        </div>
-                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">Active</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-100 group-hover:text-emerald-400 transition">3초 파스텔 차트 시각화기</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                        엑셀, CSV, 표 데이터를 붙여넣으면 감성적인 파스텔 차트로 즉시 렌더링하고 다운로드합니다.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-700/60 flex items-center justify-between text-xs font-bold text-emerald-400 group-hover:text-emerald-300">
-                    <span>도구 열기</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
-                </div>
-            </a>
-
+      <a href="lorem-generator.html" data-cat="content" data-keywords="dummy text placeholder lorem ipsum" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">📜</div>
+          <h2 class="text-sm font-bold text-white mb-1">Lorem Ipsum Generator</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Instant dummy text generator in English and Korean by paragraphs, words, or bytes.</p>
         </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Text & Content →</span>
+      </a>
 
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-900/90 py-6 mt-12">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-            <span>© 2026 StarSign16 Toolkit. All rights reserved.</span>
-            <div class="flex space-x-4">
-                <a href="https://starsign16.com" target="_blank" class="hover:text-slate-300 transition">Main Hub</a>
-                <span>·</span>
-                <span class="text-emerald-400 font-medium">All Systems Operational</span>
-            </div>
+      <a href="markdown-previewer.html" data-cat="content" data-keywords="markdown html editor live preview md" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">📑</div>
+          <h2 class="text-sm font-bold text-white mb-1">Markdown Live Editor</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Split-screen live Markdown previewer with instant HTML export and copy.</p>
         </div>
-    </footer>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Text & Content →</span>
+      </a>
 
-    <script>
-        function filterTools(category) {
-            const cards = document.querySelectorAll('.tool-card');
-            const tabs = ['all', 'text', 'visual', 'productivity'];
+      <!-- Category 2: Image & Media -->
+      <a href="image-compressor.html" data-cat="image" data-keywords="compress image optimize webp png jpg resize reduce" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">🖼️</div>
+          <h2 class="text-sm font-bold text-white mb-1">Image Compressor</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Shrink image file size locally with side-by-side quality and compression slider.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Image & Media →</span>
+      </a>
 
-            tabs.forEach(t => {
-                const btn = document.getElementById(`tab-${t}`);
-                if (t === category) {
-                    btn.className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow-xs transition";
-                } else {
-                    btn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition";
-                }
-            });
+      <a href="background-remover.html" data-cat="image" data-keywords="remove background ai cutout transparent png" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">✂️</div>
+          <h2 class="text-sm font-bold text-white mb-1">AI Background Remover</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">High-precision on-device AI background cutout. 100% private in browser.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Image & Media →</span>
+      </a>
 
-            cards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
+      <a href="image-resizer.html" data-cat="image" data-keywords="resize dimensions scale crop pixels ratio" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">📐</div>
+          <h2 class="text-sm font-bold text-white mb-1">Image Resizer & Scaler</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Adjust exact pixel dimensions or percentage scales with locked aspect ratios.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Image & Media →</span>
+      </a>
+
+      <a href="favicon-generator.html" data-cat="image" data-keywords="favicon app icon pwa apple touch icon ico" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">⭐</div>
+          <h2 class="text-sm font-bold text-white mb-1">Favicon & Icon Generator</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Convert a single image into all standard web favicon sizes and copy HTML tags.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Image & Media →</span>
+      </a>
+
+      <!-- Category 3: Dev & Data -->
+      <a href="json-formatter.html" data-cat="dev" data-keywords="json format beautify minify validate parse" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">🗄️</div>
+          <h2 class="text-sm font-bold text-white mb-1">JSON Formatter & Validator</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Beautify, minify, and detect syntax errors in JSON objects with line precision.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Dev & Data →</span>
+      </a>
+
+      <a href="base64-tool.html" data-cat="dev" data-keywords="base64 encode decode image binary string data url" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">🔐</div>
+          <h2 class="text-sm font-bold text-white mb-1">Base64 Encoder / Decoder</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Encode and decode text or files to Base64 strings with live image decoding.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Dev & Data →</span>
+      </a>
+
+      <a href="regex-tester.html" data-cat="dev" data-keywords="regex regular expression test match pattern extract" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">🔍</div>
+          <h2 class="text-sm font-bold text-white mb-1">Regex Tester & Matcher</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Real-time regular expression testing with visual highlighting and list export.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Dev & Data →</span>
+      </a>
+
+      <a href="url-parser.html" data-cat="dev" data-keywords="url parse encode decode query params uri breakdown" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">🔗</div>
+          <h2 class="text-sm font-bold text-white mb-1">URL Parser & Encoder</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Dissect URL components, parse query parameters into grids, and sanitize URI strings.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Dev & Data →</span>
+      </a>
+
+      <!-- Category 4: Life & Business -->
+      <a href="dday-calculator.html" data-cat="biz" data-keywords="dday countdown business working days weekend holiday" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">📅</div>
+          <h2 class="text-sm font-bold text-white mb-1">D-Day & Working Day Calc</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Event countdown and business working day calculator excluding weekends.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Life & Business →</span>
+      </a>
+
+      <a href="discount-calc.html" data-cat="biz" data-keywords="discount vat sales tax margin markup price calculate" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">🏷️</div>
+          <h2 class="text-sm font-bold text-white mb-1">Discount, VAT & Margin</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Calculate final discount prices, VAT tax breakdowns, and net profit margins.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Life & Business →</span>
+      </a>
+
+      <a href="qr-generator.html" data-cat="biz" data-keywords="qr code barcode wifi link download generator" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">📱</div>
+          <h2 class="text-sm font-bold text-white mb-1">QR Code Generator</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Generate instant high-resolution QR codes for links, text, and Wi-Fi networks.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Life & Business →</span>
+      </a>
+
+      <a href="loan-compound-calc.html" data-cat="biz" data-keywords="loan mortgage compound interest amortize schedule payment" class="tool-card bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="text-2xl mb-3">💰</div>
+          <h2 class="text-sm font-bold text-white mb-1">Loan & Compound Calc</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Simulate mortgage repayments and compound investment returns with schedules.</p>
+        </div>
+        <span class="text-[10px] font-mono text-cyan-400 mt-4 block">Life & Business →</span>
+      </a>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-8 text-center text-xs text-slate-500 bg-slate-950">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 StarSign16 Ecosystem. All tools run 100% locally in your browser.</p>
+      <div class="flex items-center gap-4">
+        <a href="https://en.starsign16.com" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-400 transition">Main Blog (English)</a>
+        <a href="ko/index.html" class="hover:text-cyan-400 transition">Korean</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('toolSearch');
+    const cards = document.querySelectorAll('.tool-card');
+    let currentCat = 'all';
+
+    function filterTools() {
+      const query = searchInput.value.toLowerCase().trim();
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-cat');
+        const keywords = card.getAttribute('data-keywords').toLowerCase();
+        const text = card.innerText.toLowerCase();
+
+        const matchCat = currentCat === 'all' || cat === currentCat;
+        const matchQuery = !query || keywords.includes(query) || text.includes(query);
+
+        if (matchCat && matchQuery) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
         }
-    </script>
+      });
+    }
+
+    function filterCategory(cat) {
+      currentCat = cat;
+      const buttons = ['all', 'content', 'image', 'dev', 'biz'];
+
+      buttons.forEach(b => {
+        const btn = document.getElementById(`btn-${b}`);
+        if (b === cat) {
+          btn.className = 'px-3.5 py-1.5 rounded-lg bg-cyan-600 text-white font-bold transition';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        }
+      });
+
+      filterTools();
+    }
+
+    searchInput.addEventListener('input', filterTools);
+  </script>
 </body>
 </html>

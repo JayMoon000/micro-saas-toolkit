@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL 구조 분석기 & 인코더 - StarSign16 툴킷</title>
+  <meta name="description" content="웹 주소의 도메인, 경로, 쿼리 파라미터를 표로 분해하고 인코딩/디코딩합니다. 100% 브라우저 연산.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 툴킷 허브</a>
+      <div class="flex items-center gap-3">
+        <a href="../url-parser.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">English</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full flex flex-col">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">개발 & 데이터</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">URL 구조 분석기 & 인코더 / 디코더</h1>
+      <p class="text-xs text-slate-400">웹 주소의 세부 구성 요소와 쿼리 변수(?key=value)를 분석하고, 한글 URI 인코딩/디코딩을 수행합니다.</p>
+    </div>
+
+    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl mb-6">
+      <label class="text-xs font-semibold text-slate-400 block mb-1.5">분석할 URL 주소 입력</label>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input type="text" id="urlInput" placeholder="https://example.com/search?keyword=마이크로툴킷&lang=ko&page=1" class="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-cyan-300 font-mono focus:outline-none focus:border-cyan-500" />
+        <div class="flex gap-2">
+          <button onclick="loadSample()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition">샘플</button>
+          <button onclick="clearAll()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition">지우기</button>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-slate-800/80 text-xs">
+        <span class="text-slate-500">인코딩 유틸:</span>
+        <button onclick="encodeFullUrl()" class="px-3 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded transition">URI 인코딩 (한글 변환)</button>
+        <button onclick="decodeFullUrl()" class="px-3 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded transition">URI 디코딩 (한글 복원)</button>
+        <button onclick="copyFullUrl()" id="copyUrlBtn" class="px-3 py-1 bg-cyan-950 hover:bg-cyan-900 border border-cyan-800 text-cyan-400 rounded transition">URL 복사</button>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
+          <span class="text-[11px] text-slate-500 block mb-0.5">프로토콜 (Protocol)</span>
+          <span id="protoDisp" class="text-xs font-mono font-bold text-indigo-400 break-all">-</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
+          <span class="text-[11px] text-slate-500 block mb-0.5">호스트 / 도메인 (Host)</span>
+          <span id="hostDisp" class="text-xs font-mono font-bold text-cyan-400 break-all">-</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
+          <span class="text-[11px] text-slate-500 block mb-0.5">경로 (Pathname)</span>
+          <span id="pathDisp" class="text-xs font-mono font-bold text-white break-all">-</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
+          <span class="text-[11px] text-slate-500 block mb-0.5">앵커 / 해시 (Hash)</span>
+          <span id="hashDisp" class="text-xs font-mono font-bold text-emerald-400 break-all">-</span>
+        </div>
+      </div>
+
+      <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
+        <div class="px-4 py-3 bg-slate-900/80 border-b border-slate-800 flex justify-between items-center">
+          <span class="text-xs font-semibold text-white">추출된 쿼리 파라미터 목록</span>
+          <span id="paramCount" class="text-[11px] font-mono text-cyan-400">0개 파라미터</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="p-3 w-1/3">Key (변수명)</th>
+                <th class="p-3">Value (값)</th>
+                <th class="p-3 w-20 text-center">동작</th>
+              </tr>
+            </thead>
+            <tbody id="paramTableBody" class="divide-y divide-slate-800/60 text-slate-200">
+              <tr><td colspan="3" class="p-4 text-center text-slate-500 italic">URL에 포함된 쿼리 파라미터가 없습니다.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>StarSign16 생태계. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">메인 허브</a></p>
+  </footer>
+
+  <script>
+    const urlInput = document.getElementById('urlInput');
+    const protoDisp = document.getElementById('protoDisp');
+    const hostDisp = document.getElementById('hostDisp');
+    const pathDisp = document.getElementById('pathDisp');
+    const hashDisp = document.getElementById('hashDisp');
+    const paramCount = document.getElementById('paramCount');
+    const paramTableBody = document.getElementById('paramTableBody');
+    const copyUrlBtn = document.getElementById('copyUrlBtn');
+
+    function parseURL() {
+      const raw = urlInput.value.trim();
+      if (!raw) {
+        resetDisplays();
+        return;
+      }
+
+      try {
+        let validUrl = raw;
+        if (!/^https?:\/\//i.test(validUrl)) validUrl = 'https://' + validUrl;
+        const parsed = new URL(validUrl);
+
+        protoDisp.innerText = parsed.protocol || '-';
+        hostDisp.innerText = parsed.host || '-';
+        pathDisp.innerText = parsed.pathname || '/';
+        hashDisp.innerText = parsed.hash || '-';
+
+        const params = Array.from(parsed.searchParams.entries());
+        paramCount.innerText = `${params.length}개 파라미터`;
+
+        if (params.length === 0) {
+          paramTableBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-500 italic">URL에 포함된 쿼리 파라미터가 없습니다.</td></tr>';
+          return;
+        }
+
+        paramTableBody.innerHTML = '';
+        params.forEach(([k, v]) => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-slate-900/50';
+          row.innerHTML = `
+            <td class="p-3 text-cyan-300 font-semibold break-all">${escapeHtml(k)}</td>
+            <td class="p-3 text-slate-300 break-all">${escapeHtml(v)}</td>
+            <td class="p-3 text-center">
+              <button onclick="copySingleValue('${escapeJs(v)}')" class="text-slate-400 hover:text-cyan-400 text-[11px] underline">복사</button>
+            </td>
+          `;
+          paramTableBody.appendChild(row);
+        });
+      } catch (err) {
+        resetDisplays();
+        paramTableBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-rose-400 italic">유효하지 않은 URL 형식입니다.</td></tr>';
+      }
+    }
+
+    function resetDisplays() {
+      protoDisp.innerText = '-';
+      hostDisp.innerText = '-';
+      pathDisp.innerText = '-';
+      hashDisp.innerText = '-';
+      paramCount.innerText = '0개 파라미터';
+      paramTableBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-500 italic">URL에 포함된 쿼리 파라미터가 없습니다.</td></tr>';
+    }
+
+    function encodeFullUrl() {
+      if (!urlInput.value) return;
+      try {
+        urlInput.value = encodeURI(urlInput.value);
+        parseURL();
+      } catch (e) {}
+    }
+
+    function decodeFullUrl() {
+      if (!urlInput.value) return;
+      try {
+        urlInput.value = decodeURIComponent(urlInput.value);
+        parseURL();
+      } catch (e) {}
+    }
+
+    function copyFullUrl() {
+      if (!urlInput.value) return;
+      navigator.clipboard.writeText(urlInput.value);
+      copyUrlBtn.innerText = '복사완료!';
+      setTimeout(() => copyUrlBtn.innerText = 'URL 복사', 1500);
+    }
+
+    function copySingleValue(val) { navigator.clipboard.writeText(val); }
+
+    function loadSample() {
+      urlInput.value = 'https://starsign16.com/search?keyword=마이크로툴킷&category=개발도구&lang=ko&page=2#top';
+      parseURL();
+    }
+
+    function clearAll() {
+      urlInput.value = '';
+      resetDisplays();
+      urlInput.focus();
+    }
+
+    function escapeHtml(str) { return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function escapeJs(str) { return str.replace(/'/g, "\\'").replace(/"/g, '\\"'); }
+
+    urlInput.addEventListener('input', parseURL);
+    loadSample();
+  </script>
+</body>
+</html>

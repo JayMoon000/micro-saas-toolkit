@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정규식 (Regex) 실시간 테스터 - StarSign16 툴킷</title>
+  <meta name="description" content="정규식 패턴 매칭 결과를 시각적으로 하이라이트하고 일치 항목을 실시간 추출합니다. 100% 브라우저 연산.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .match-tag {
+      background-color: rgba(6, 182, 212, 0.35);
+      border-bottom: 2px solid #06b6d4;
+      border-radius: 2px;
+      color: #f8fafc;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 툴킷 허브</a>
+      <div class="flex items-center gap-3">
+        <a href="../regex-tester.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">English</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full flex flex-col">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">개발 & 데이터</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">정규식 (Regex) 실시간 테스터</h1>
+      <p class="text-xs text-slate-400">정규표현식 문법을 검증하고 본문 텍스트 매칭 결과를 형광펜 하이라이트로 확인합니다.</p>
+    </div>
+
+    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl mb-4 space-y-4">
+      <div>
+        <label class="text-xs font-semibold text-slate-400 block mb-1.5">정규식 패턴 (Pattern)</label>
+        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3 focus-within:border-cyan-500">
+          <span class="text-slate-500 font-mono text-base select-none">/</span>
+          <input type="text" id="regexPattern" placeholder="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" class="flex-1 bg-transparent px-2 py-2.5 text-sm text-cyan-300 font-mono focus:outline-none" />
+          <span class="text-slate-500 font-mono text-base select-none">/</span>
+          <input type="text" id="regexFlags" value="gm" placeholder="플래그" class="w-14 bg-transparent px-2 py-2.5 text-xs text-slate-300 font-mono focus:outline-none" />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <span class="text-slate-500">자주 쓰는 패턴:</span>
+        <button onclick="applyPreset('email')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">이메일</button>
+        <button onclick="applyPreset('url')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">웹링크 (URL)</button>
+        <button onclick="applyPreset('phone')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">전화번호</button>
+        <button onclick="applyPreset('numbers')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">숫자만</button>
+        <button onclick="applyPreset('date')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 transition">날짜 (YYYY-MM-DD)</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 mb-4">
+      <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden flex flex-col">
+        <div class="px-4 py-2 bg-slate-900/80 border-b border-slate-800 text-xs font-semibold text-slate-400 flex justify-between">
+          <span>테스트 본문</span>
+          <span id="matchStats" class="text-cyan-400 font-mono">0건 일치</span>
+        </div>
+        <textarea id="testText" placeholder="테스트할 문자열을 입력하세요..." class="w-full p-4 bg-transparent text-sm text-slate-200 focus:outline-none font-mono leading-relaxed resize-y h-64 md:h-full"></textarea>
+      </div>
+
+      <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden flex flex-col">
+        <div class="px-4 py-2 bg-slate-900/80 border-b border-slate-800 text-xs font-semibold text-cyan-400">
+          <span>매칭 결과 하이라이트</span>
+        </div>
+        <div id="highlightOutput" class="p-4 bg-transparent text-sm text-slate-300 font-mono leading-relaxed overflow-y-auto whitespace-pre-wrap break-all h-64 md:h-full flex-1"></div>
+      </div>
+    </div>
+
+    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-xs font-semibold text-slate-400">추출된 매칭 상세 내역</span>
+        <button onclick="copyMatches()" id="copyMatchesBtn" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded text-xs font-medium transition border border-slate-700">추출 리스트 복사</button>
+      </div>
+      <div id="matchList" class="space-y-1.5 max-h-36 overflow-y-auto text-xs font-mono text-slate-300">
+        <span class="text-slate-500 italic">일치하는 항목이 없습니다.</span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>StarSign16 생태계. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">메인 허브</a></p>
+  </footer>
+
+  <script>
+    const regexPattern = document.getElementById('regexPattern');
+    const regexFlags = document.getElementById('regexFlags');
+    const testText = document.getElementById('testText');
+    const highlightOutput = document.getElementById('highlightOutput');
+    const matchStats = document.getElementById('matchStats');
+    const matchList = document.getElementById('matchList');
+    const copyMatchesBtn = document.getElementById('copyMatchesBtn');
+
+    let latestMatches = [];
+
+    const PRESETS = {
+      email: { pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', flags: 'gm', sample: '문의사항은 hello@starsign16.com 또는 support@google.com 으로 보내주세요.' },
+      url: { pattern: 'https?:\\/\\/[\\w\\-\\.]+(?::\\d+)?(?:\\/[\\w\\/_\\.]*)?(?:\\?[\\w=&%\\-]*)?', flags: 'gm', sample: '메인 주소는 https://starsign16.com 이고 서브도메인은 https://tool.starsign16.com/ko/ 입니다.' },
+      phone: { pattern: '\\b\\d{2,3}[-.]?\\d{3,4}[-.]?\\d{4}\\b', flags: 'gm', sample: '연락처는 010-1234-5678, 대표번호 02-987-6543 또는 031.555.7788 입니다.' },
+      numbers: { pattern: '\\b\\d+\\b', flags: 'gm', sample: '주문번호 1024번, 수량 16개, 총 결제액 250000원입니다.' },
+      date: { pattern: '\\b\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])\\b', flags: 'gm', sample: '배포일자는 2026-08-23 이며 다음 점검은 2026-09-01 예정입니다.' }
+    };
+
+    function applyPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      regexPattern.value = p.pattern;
+      regexFlags.value = p.flags;
+      testText.value = p.sample;
+      runRegex();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function runRegex() {
+      const pat = regexPattern.value;
+      const flags = regexFlags.value;
+      const text = testText.value;
+
+      if (!pat || !text) {
+        highlightOutput.innerHTML = escapeHtml(text);
+        matchStats.innerText = '0건 일치';
+        matchList.innerHTML = '<span class="text-slate-500 italic">일치하는 항목이 없습니다.</span>';
+        latestMatches = [];
+        return;
+      }
+
+      try {
+        const regex = new RegExp(pat, flags);
+        const matches = [...text.matchAll(new RegExp(pat, flags.includes('g') ? flags : flags + 'g'))];
+        latestMatches = matches.map(m => m[0]);
+        matchStats.innerText = `${matches.length}건 일치`;
+
+        if (matches.length === 0) {
+          highlightOutput.innerHTML = escapeHtml(text);
+          matchList.innerHTML = '<span class="text-slate-500 italic">일치하는 항목이 없습니다.</span>';
+          return;
+        }
+
+        let highlighted = '';
+        let lastIndex = 0;
+        let matchItemsHtml = '';
+
+        matches.forEach((m, idx) => {
+          const matchStart = m.index;
+          const matchEnd = matchStart + m[0].length;
+          highlighted += escapeHtml(text.substring(lastIndex, matchStart));
+          highlighted += `<mark class="match-tag">${escapeHtml(m[0])}</mark>`;
+          lastIndex = matchEnd;
+
+          matchItemsHtml += `<div class="p-1.5 bg-slate-900 rounded border border-slate-800 flex justify-between">
+            <span class="text-cyan-300">#${idx + 1}: ${escapeHtml(m[0])}</span>
+            <span class="text-slate-500">인덱스 위치 [${matchStart}:${matchEnd}]</span>
+          </div>`;
+        });
+
+        highlighted += escapeHtml(text.substring(lastIndex));
+        highlightOutput.innerHTML = highlighted;
+        matchList.innerHTML = matchItemsHtml;
+      } catch (err) {
+        matchStats.innerText = '문법 오류';
+        highlightOutput.innerHTML = `<span class="text-rose-400">⚠️ 정규식 오류: ${err.message}</span>`;
+        matchList.innerHTML = '<span class="text-rose-400 italic">패턴 및 플래그 문법을 확인하세요.</span>';
+        latestMatches = [];
+      }
+    }
+
+    function copyMatches() {
+      if (latestMatches.length === 0) return;
+      navigator.clipboard.writeText(latestMatches.join('\n'));
+      copyMatchesBtn.innerText = '리스트 복사완료!';
+      setTimeout(() => copyMatchesBtn.innerText = '추출 리스트 복사', 1500);
+    }
+
+    regexPattern.addEventListener('input', runRegex);
+    regexFlags.addEventListener('input', runRegex);
+    testText.addEventListener('input', runRegex);
+
+    applyPreset('email');
+  </script>
+</body>
+</html>

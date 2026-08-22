@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan & Compound Interest Calculator - StarSign16 Toolkit</title>
+  <meta name="description" content="Calculate loan repayments and compound investment growth with amortization schedules. 100% client-side.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 Toolkit Hub</a>
+      <div class="flex items-center gap-3">
+        <a href="ko/loan-compound-calc.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">Korean</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Life & Business</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">Loan & Compound Interest Calculator</h1>
+      <p class="text-xs text-slate-400">Simulate mortgage repayments and compound investment returns instantly. Zero server uploads.</p>
+    </div>
+
+    <div class="flex gap-2 mb-6 border-b border-slate-800 pb-px">
+      <button onclick="switchMode('loan')" id="tabLoanBtn" class="px-5 py-2.5 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 transition">Loan Amortization</button>
+      <button onclick="switchMode('compound')" id="tabCompoundBtn" class="px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Compound Interest Growth</button>
+    </div>
+
+    <!-- 1. Loan Workspace -->
+    <div id="loanWorkspace" class="space-y-6">
+      <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">Loan Principal ($)</label>
+          <input type="number" id="loanAmount" value="100000" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">Annual Interest Rate (%)</label>
+          <input type="number" step="0.1" id="loanRate" value="4.5" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">Period (Years)</label>
+          <input type="number" id="loanYears" value="10" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+      </div>
+
+      <div class="flex gap-4 px-2 text-xs">
+        <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+          <input type="radio" name="repayMethod" value="equalPI" checked class="text-cyan-500 focus:ring-0" />
+          <span>Equal Principal & Interest</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+          <input type="radio" name="repayMethod" value="equalP" class="text-cyan-500 focus:ring-0" />
+          <span>Equal Principal</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+          <input type="radio" name="repayMethod" value="lumpSum" class="text-cyan-500 focus:ring-0" />
+          <span>Bullet (Interest Only)</span>
+        </label>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">1st Month Payment</span>
+          <span id="monthlyPayDisp" class="text-2xl font-bold font-mono text-cyan-400">$0.00</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">Total Interest</span>
+          <span id="totalInterestDisp" class="text-2xl font-bold font-mono text-indigo-400">$0.00</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">Total Repayment</span>
+          <span id="totalRepayDisp" class="text-2xl font-bold font-mono text-slate-200">$0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Compound Workspace -->
+    <div id="compoundWorkspace" class="hidden space-y-6">
+      <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">Initial Deposit ($)</label>
+          <input type="number" id="compInitial" value="10000" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">Monthly Deposit ($)</label>
+          <input type="number" id="compMonthly" value="500" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">Annual Return (%)</label>
+          <input type="number" step="0.1" id="compRate" value="7.0" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">Years to Grow</label>
+          <input type="number" id="compYears" value="10" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">Total Principal Invested</span>
+          <span id="compPrincipalDisp" class="text-2xl font-bold font-mono text-slate-300">$0.00</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">Compound Profit Earned</span>
+          <span id="compInterestDisp" class="text-2xl font-bold font-mono text-emerald-400">$0.00</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">Final Future Value</span>
+          <span id="compTotalDisp" class="text-2xl font-bold font-mono text-cyan-400">$0.00</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Part of the StarSign16 Ecosystem. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">Main Hub</a></p>
+  </footer>
+
+  <script>
+    const tabLoanBtn = document.getElementById('tabLoanBtn');
+    const tabCompoundBtn = document.getElementById('tabCompoundBtn');
+    const loanWorkspace = document.getElementById('loanWorkspace');
+    const compoundWorkspace = document.getElementById('compoundWorkspace');
+
+    function switchMode(mode) {
+      if (mode === 'loan') {
+        tabLoanBtn.className = 'px-5 py-2.5 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 transition';
+        tabCompoundBtn.className = 'px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+        loanWorkspace.classList.remove('hidden');
+        compoundWorkspace.classList.add('hidden');
+      } else {
+        tabCompoundBtn.className = 'px-5 py-2.5 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 transition';
+        tabLoanBtn.className = 'px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+        compoundWorkspace.classList.remove('hidden');
+        loanWorkspace.classList.add('hidden');
+      }
+    }
+
+    const loanAmount = document.getElementById('loanAmount');
+    const loanRate = document.getElementById('loanRate');
+    const loanYears = document.getElementById('loanYears');
+    const monthlyPayDisp = document.getElementById('monthlyPayDisp');
+    const totalInterestDisp = document.getElementById('totalInterestDisp');
+    const totalRepayDisp = document.getElementById('totalRepayDisp');
+    const repayRadios = document.getElementsByName('repayMethod');
+
+    function calcLoan() {
+      const P = parseFloat(loanAmount.value) || 0;
+      const annualR = (parseFloat(loanRate.value) || 0) / 100;
+      const r = annualR / 12;
+      const n = (parseInt(loanYears.value) || 0) * 12;
+
+      if (P <= 0 || n <= 0) {
+        monthlyPayDisp.innerText = '$0.00';
+        totalInterestDisp.innerText = '$0.00';
+        totalRepayDisp.innerText = '$0.00';
+        return;
+      }
+
+      let method = 'equalPI';
+      for (const rad of repayRadios) {
+        if (rad.checked) method = rad.value;
+      }
+
+      let firstMonthPay = 0, totalInterest = 0, totalRepay = 0;
+
+      if (method === 'equalPI') {
+        if (r === 0) {
+          firstMonthPay = P / n;
+          totalInterest = 0;
+        } else {
+          firstMonthPay = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+          totalInterest = (firstMonthPay * n) - P;
+        }
+        totalRepay = P + totalInterest;
+      } else if (method === 'equalP') {
+        const principalPerMonth = P / n;
+        firstMonthPay = principalPerMonth + (P * r);
+        totalInterest = ((n + 1) * P * r) / 2;
+        totalRepay = P + totalInterest;
+      } else {
+        firstMonthPay = P * r;
+        totalInterest = P * annualR * (n / 12);
+        totalRepay = P + totalInterest;
+      }
+
+      monthlyPayDisp.innerText = `$${firstMonthPay.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      totalInterestDisp.innerText = `$${totalInterest.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      totalRepayDisp.innerText = `$${totalRepay.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    loanAmount.addEventListener('input', calcLoan);
+    loanRate.addEventListener('input', calcLoan);
+    loanYears.addEventListener('input', calcLoan);
+    repayRadios.forEach(r => r.addEventListener('change', calcLoan));
+
+    const compInitial = document.getElementById('compInitial');
+    const compMonthly = document.getElementById('compMonthly');
+    const compRate = document.getElementById('compRate');
+    const compYears = document.getElementById('compYears');
+    const compPrincipalDisp = document.getElementById('compPrincipalDisp');
+    const compInterestDisp = document.getElementById('compInterestDisp');
+    const compTotalDisp = document.getElementById('compTotalDisp');
+
+    function calcCompound() {
+      const init = parseFloat(compInitial.value) || 0;
+      const pmt = parseFloat(compMonthly.value) || 0;
+      const annualR = (parseFloat(compRate.value) || 0) / 100;
+      const r = annualR / 12;
+      const months = (parseInt(compYears.value) || 0) * 12;
+
+      let fv = init * Math.pow(1 + r, months);
+      if (r > 0) {
+        fv += pmt * ((Math.pow(1 + r, months) - 1) / r);
+      } else {
+        fv += pmt * months;
+      }
+
+      const totalPrincipal = init + (pmt * months);
+      const totalInterest = Math.max(0, fv - totalPrincipal);
+
+      compPrincipalDisp.innerText = `$${totalPrincipal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      compInterestDisp.innerText = `$${totalInterest.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      compTotalDisp.innerText = `$${fv.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    compInitial.addEventListener('input', calcCompound);
+    compMonthly.addEventListener('input', calcCompound);
+    compRate.addEventListener('input', calcCompound);
+    compYears.addEventListener('input', calcCompound);
+
+    calcLoan();
+    calcCompound();
+  </script>
+</body>
+</html>

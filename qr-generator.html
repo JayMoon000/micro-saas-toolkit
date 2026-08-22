@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code & Barcode Generator - StarSign16 Toolkit</title>
+  <meta name="description" content="Generate high-resolution QR codes for URLs, Text, and Wi-Fi instantly in your browser. 100% private and client-side.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 Toolkit Hub</a>
+      <div class="flex items-center gap-3">
+        <a href="ko/qr-generator.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">Korean</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Life & Business</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">QR Code Generator</h1>
+      <p class="text-xs text-slate-400">Instant vector-sharp QR codes for links, text, and Wi-Fi credentials. Zero server uploads.</p>
+    </div>
+
+    <div class="flex gap-2 mb-6 border-b border-slate-800 pb-px">
+      <button onclick="setType('url')" id="typeUrlBtn" class="px-4 py-2 text-xs font-bold border-b-2 border-cyan-500 text-cyan-400 transition">URL / Link</button>
+      <button onclick="setType('text')" id="typeTextBtn" class="px-4 py-2 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Plain Text</button>
+      <button onclick="setType('wifi')" id="typeWifiBtn" class="px-4 py-2 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Wi-Fi Network</button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+      <div class="md:col-span-7 space-y-4">
+        <div id="standardInputGroup" class="bg-slate-950 border border-slate-800 p-4 rounded-xl">
+          <label id="inputLabel" class="text-xs font-semibold text-slate-400 block mb-1.5">Target Website Link</label>
+          <input type="text" id="qrText" placeholder="https://starsign16.com" value="https://starsign16.com" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-cyan-300 font-mono focus:outline-none focus:border-cyan-500" />
+        </div>
+
+        <div id="wifiInputGroup" class="hidden bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Network Name (SSID)</label>
+            <input type="text" id="wifiSsid" placeholder="e.g. StarSign_5G" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Password</label>
+            <input type="text" id="wifiPass" placeholder="e.g. secret1234" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Security Type</label>
+            <select id="wifiType" class="w-full p-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-300 focus:outline-none font-mono">
+              <option value="WPA">WPA/WPA2/WPA3</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">None (Open)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3 text-xs">
+          <span class="font-semibold text-slate-400 block">QR Customization</span>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-slate-500 block mb-1">Foreground Color</label>
+              <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 p-1.5 rounded-lg">
+                <input type="color" id="qrDark" value="#000000" class="w-7 h-7 rounded border-0 bg-transparent cursor-pointer" />
+                <span id="darkHex" class="font-mono text-slate-300 text-[11px]">#000000</span>
+              </div>
+            </div>
+            <div>
+              <label class="text-slate-500 block mb-1">Background Color</label>
+              <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 p-1.5 rounded-lg">
+                <input type="color" id="qrLight" value="#ffffff" class="w-7 h-7 rounded border-0 bg-transparent cursor-pointer" />
+                <span id="lightHex" class="font-mono text-slate-300 text-[11px]">#ffffff</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-5 flex flex-col">
+        <div class="bg-slate-950 border border-slate-800 p-6 rounded-xl flex flex-col items-center justify-center flex-1">
+          <div class="p-4 bg-white rounded-xl shadow-lg mb-4 flex items-center justify-center min-w-[210px] min-h-[210px]">
+            <div id="qrcode"></div>
+          </div>
+          <button onclick="downloadQR()" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2">
+            <span>Download PNG Image</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Part of the StarSign16 Ecosystem. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">Main Hub</a></p>
+  </footer>
+
+  <script>
+    let currentType = 'url';
+    let qrcode = null;
+
+    const qrContainer = document.getElementById('qrcode');
+    const qrText = document.getElementById('qrText');
+    const inputLabel = document.getElementById('inputLabel');
+    const standardInputGroup = document.getElementById('standardInputGroup');
+    const wifiInputGroup = document.getElementById('wifiInputGroup');
+    const wifiSsid = document.getElementById('wifiSsid');
+    const wifiPass = document.getElementById('wifiPass');
+    const wifiType = document.getElementById('wifiType');
+    const qrDark = document.getElementById('qrDark');
+    const qrLight = document.getElementById('qrLight');
+    const darkHex = document.getElementById('darkHex');
+    const lightHex = document.getElementById('lightHex');
+
+    function setType(type) {
+      currentType = type;
+      ['url', 'text', 'wifi'].forEach(t => {
+        const btn = document.getElementById(`type${t.charAt(0).toUpperCase() + t.slice(1)}Btn`);
+        if (t === type) {
+          btn.className = 'px-4 py-2 text-xs font-bold border-b-2 border-cyan-500 text-cyan-400 transition';
+        } else {
+          btn.className = 'px-4 py-2 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+        }
+      });
+
+      if (type === 'wifi') {
+        standardInputGroup.classList.add('hidden');
+        wifiInputGroup.classList.remove('hidden');
+      } else {
+        wifiInputGroup.classList.add('hidden');
+        standardInputGroup.classList.remove('hidden');
+        inputLabel.innerText = type === 'url' ? 'Target Website Link' : 'Plain Text Payload';
+        qrText.placeholder = type === 'url' ? 'https://starsign16.com' : 'Enter text payload...';
+      }
+      renderQR();
+    }
+
+    function getPayload() {
+      if (currentType === 'wifi') {
+        const ssid = wifiSsid.value.trim() || 'MyWiFi';
+        const pass = wifiPass.value.trim();
+        const type = wifiType.value;
+        return `WIFI:S:${ssid};T:${type};P:${pass};;`;
+      }
+      return qrText.value.trim() || 'https://starsign16.com';
+    }
+
+    function renderQR() {
+      qrContainer.innerHTML = '';
+      const payload = getPayload();
+
+      qrcode = new QRCode(qrContainer, {
+        text: payload,
+        width: 180,
+        height: 180,
+        colorDark: qrDark.value,
+        colorLight: qrLight.value,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function downloadQR() {
+      const img = qrContainer.querySelector('img');
+      const canvas = qrContainer.querySelector('canvas');
+      let dataUrl = '';
+
+      if (img && img.src) {
+        dataUrl = img.src;
+      } else if (canvas) {
+        dataUrl = canvas.toDataURL('image/png');
+      }
+
+      if (!dataUrl) return;
+
+      const link = document.createElement('a');
+      link.download = 'starsign16-qrcode.png';
+      link.href = dataUrl;
+      link.click();
+    }
+
+    qrText.addEventListener('input', renderQR);
+    wifiSsid.addEventListener('input', renderQR);
+    wifiPass.addEventListener('input', renderQR);
+    wifiType.addEventListener('change', renderQR);
+
+    qrDark.addEventListener('input', (e) => {
+      darkHex.innerText = e.target.value;
+      renderQR();
+    });
+
+    qrLight.addEventListener('input', (e) => {
+      lightHex.innerText = e.target.value;
+      renderQR();
+    });
+
+    renderQR();
+  </script>
+</body>
+</html>

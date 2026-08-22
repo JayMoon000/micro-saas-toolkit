@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base64 Encoder & Decoder - StarSign16 Toolkit</title>
+  <meta name="description" content="Encode or decode text, images, and files to Base64 format instantly in your browser. 100% secure and client-side.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .checkerboard {
+      background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%), 
+                        linear-gradient(-45deg, #1e293b 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #1e293b 75%), 
+                        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 Toolkit Hub</a>
+      <div class="flex items-center gap-3">
+        <a href="ko/base64-tool.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">Korean</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Dev & Data</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">Base64 Encoder / Decoder</h1>
+      <p class="text-xs text-slate-400">Convert text, images, or files to Base64 strings and vice versa. Zero server uploads.</p>
+    </div>
+
+    <div class="flex gap-2 mb-6 border-b border-slate-800 pb-px">
+      <button onclick="switchTab('text')" id="tabTextBtn" class="px-5 py-2.5 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 transition">Text & Image Decoder</button>
+      <button onclick="switchTab('file')" id="tabFileBtn" class="px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">File / Image ➔ Base64</button>
+    </div>
+
+    <div id="textMode" class="block space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden flex flex-col">
+          <div class="px-4 py-2 bg-slate-900/80 border-b border-slate-800 text-xs font-semibold text-slate-400 flex justify-between">
+            <span>Input (Text or Base64 / Data URL)</span>
+          </div>
+          <textarea id="textInput" placeholder="Paste text or Base64 image string (e.g. data:image/png;base64,...)" class="w-full p-4 bg-transparent text-sm text-slate-200 focus:outline-none font-mono leading-relaxed resize-y h-64"></textarea>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden flex flex-col">
+          <div class="px-4 py-2 bg-slate-900/80 border-b border-slate-800 text-xs font-semibold text-cyan-400 flex justify-between items-center">
+            <span>Decoded / Encoded Result</span>
+            <span id="outputTypeTag" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded hidden">Image Detected</span>
+          </div>
+          <textarea id="textOutput" readonly placeholder="Result will appear here..." class="w-full p-4 bg-transparent text-sm text-cyan-300 focus:outline-none font-mono leading-relaxed resize-y h-64"></textarea>
+          <div id="imgPreviewContainer" class="hidden flex-1 p-4 checkerboard flex flex-col items-center justify-center min-h-[256px]">
+            <img id="decodedImagePreview" class="max-h-48 object-contain rounded mb-3 shadow" alt="Decoded Preview" />
+            <a id="downloadDecodedImgBtn" download="decoded-image.png" class="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-bold transition">Download Decoded Image</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-950 border border-slate-800 p-3 rounded-lg text-xs">
+        <div class="flex gap-2">
+          <button onclick="processText('encode')" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-bold transition">Encode (Text ➔ Base64)</button>
+          <button onclick="processText('decode')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition">Decode (Base64 ➔ Text / Image)</button>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="clearText()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium transition">Clear</button>
+          <button onclick="copyTextOutput()" id="copyTextBtn" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition border border-slate-600">Copy Result</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="fileMode" class="hidden space-y-6">
+      <div
+        id="dropZone"
+        onclick="document.getElementById('fileInput').click()"
+        class="border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-slate-950/60 rounded-xl p-8 text-center cursor-pointer transition"
+      >
+        <input type="file" id="fileInput" class="hidden" />
+        <div class="text-3xl mb-2">📄</div>
+        <p class="text-sm font-semibold text-slate-200 mb-1">Click or drag & drop a file</p>
+        <p class="text-xs text-slate-500">Supports images, PDF, fonts, etc. (Generates full Data URL)</p>
+      </div>
+
+      <div id="fileResultArea" class="hidden bg-slate-950 border border-slate-800 rounded-xl overflow-hidden flex flex-col">
+        <div class="px-4 py-2 bg-slate-900/80 border-b border-slate-800 text-xs font-semibold text-cyan-400 flex justify-between items-center">
+          <span>Base64 File String</span>
+          <span id="fileSizeStat" class="text-[10px] text-slate-500 font-mono"></span>
+        </div>
+        <textarea id="fileOutput" readonly class="w-full p-4 bg-transparent text-xs text-cyan-300 focus:outline-none font-mono leading-relaxed resize-y h-48 break-all"></textarea>
+        <div class="p-3 bg-slate-900/50 border-t border-slate-800 flex justify-between items-center">
+          <span class="text-xs text-slate-400" id="fileNameDisp">filename.ext</span>
+          <button onclick="copyFileOutput()" id="copyFileBtn" class="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-bold transition">Copy Base64</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Part of the StarSign16 Ecosystem. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">Main Hub</a></p>
+  </footer>
+
+  <script>
+    const tabTextBtn = document.getElementById('tabTextBtn');
+    const tabFileBtn = document.getElementById('tabFileBtn');
+    const textMode = document.getElementById('textMode');
+    const fileMode = document.getElementById('fileMode');
+
+    function switchTab(mode) {
+      if (mode === 'text') {
+        tabTextBtn.className = 'px-5 py-2.5 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 transition';
+        tabFileBtn.className = 'px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+        textMode.classList.replace('hidden', 'block');
+        fileMode.classList.add('hidden');
+      } else {
+        tabFileBtn.className = 'px-5 py-2.5 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 transition';
+        tabTextBtn.className = 'px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+        fileMode.classList.replace('hidden', 'block');
+        textMode.classList.add('hidden');
+        textMode.classList.remove('block');
+      }
+    }
+
+    const textInput = document.getElementById('textInput');
+    const textOutput = document.getElementById('textOutput');
+    const imgPreviewContainer = document.getElementById('imgPreviewContainer');
+    const decodedImagePreview = document.getElementById('decodedImagePreview');
+    const downloadDecodedImgBtn = document.getElementById('downloadDecodedImgBtn');
+    const outputTypeTag = document.getElementById('outputTypeTag');
+
+    function utf8_to_b64(str) { return window.btoa(unescape(encodeURIComponent(str))); }
+    function b64_to_utf8(str) { return decodeURIComponent(escape(window.atob(str))); }
+
+    function processText(action) {
+      let val = textInput.value.trim();
+      if (!val) return;
+
+      if (action === 'encode') {
+        imgPreviewContainer.classList.add('hidden');
+        textOutput.classList.remove('hidden');
+        outputTypeTag.classList.add('hidden');
+        textOutput.value = utf8_to_b64(val);
+      } else {
+        if (val.startsWith('data:image/') || (/^[A-Za-z0-9+/=]+$/.test(val.replace(/\s/g, '')) && val.length > 500)) {
+          const dataUri = val.startsWith('data:image/') ? val : `data:image/png;base64,${val}`;
+          decodedImagePreview.src = dataUri;
+          downloadDecodedImgBtn.href = dataUri;
+          textOutput.classList.add('hidden');
+          imgPreviewContainer.classList.remove('hidden');
+          outputTypeTag.classList.remove('hidden');
+        } else {
+          try {
+            imgPreviewContainer.classList.add('hidden');
+            textOutput.classList.remove('hidden');
+            outputTypeTag.classList.add('hidden');
+            textOutput.value = b64_to_utf8(val);
+          } catch (err) {
+            alert("Invalid Base64 string for text decoding.");
+          }
+        }
+      }
+    }
+
+    function clearText() {
+      textInput.value = '';
+      textOutput.value = '';
+      imgPreviewContainer.classList.add('hidden');
+      textOutput.classList.remove('hidden');
+      outputTypeTag.classList.add('hidden');
+      textInput.focus();
+    }
+
+    function copyTextOutput() {
+      if (textOutput.classList.contains('hidden') || !textOutput.value) return;
+      navigator.clipboard.writeText(textOutput.value);
+      const btn = document.getElementById('copyTextBtn');
+      btn.innerText = 'Copied!';
+      setTimeout(() => btn.innerText = 'Copy Result', 1500);
+    }
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileResultArea = document.getElementById('fileResultArea');
+    const fileOutput = document.getElementById('fileOutput');
+    const fileSizeStat = document.getElementById('fileSizeStat');
+    const fileNameDisp = document.getElementById('fileNameDisp');
+
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-cyan-500'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-cyan-500'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-cyan-500');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) handleFile(e.target.files[0]);
+    });
+
+    function handleFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        fileResultArea.classList.remove('hidden');
+        fileOutput.value = e.target.result;
+        fileNameDisp.innerText = file.name;
+        const kb = (e.target.result.length / 1024).toFixed(2);
+        fileSizeStat.innerText = `String Size: ${kb} KB`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function copyFileOutput() {
+      if (!fileOutput.value) return;
+      navigator.clipboard.writeText(fileOutput.value);
+      const btn = document.getElementById('copyFileBtn');
+      btn.innerText = 'Copied!';
+      setTimeout(() => btn.innerText = 'Copy Base64', 1500);
+    }
+  </script>
+</body>
+</html>

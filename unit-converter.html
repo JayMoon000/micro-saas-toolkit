@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Unit Converter - StarSign16 Toolkit</title>
+  <meta name="description" content="Convert length, weight, area, digital data, and temperature units instantly. 100% free and client-side.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="/" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 Toolkit Hub</a>
+      <div class="flex items-center gap-3">
+        <a href="/ko/unit-converter.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">Korean</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Life & Business</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">Universal Unit Converter</h1>
+      <p class="text-xs text-slate-400">Real-time instant conversions for length, area (Pyung/m²), weight, data, and temperature.</p>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex gap-2 mb-6 border-b border-slate-800 pb-px overflow-x-auto">
+      <button onclick="setCategory('length')" id="tab-length" class="px-4 py-2.5 text-xs font-bold border-b-2 border-cyan-500 text-cyan-400 transition whitespace-nowrap">Length</button>
+      <button onclick="setCategory('area')" id="tab-area" class="px-4 py-2.5 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap">Area (m² / 평)</button>
+      <button onclick="setCategory('weight')" id="tab-weight" class="px-4 py-2.5 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap">Weight</button>
+      <button onclick="setCategory('data')" id="tab-data" class="px-4 py-2.5 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap">Digital Data</button>
+      <button onclick="setCategory('temp')" id="tab-temp" class="px-4 py-2.5 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap">Temperature</button>
+    </div>
+
+    <!-- Converter Grid -->
+    <div class="bg-slate-950 border border-slate-800 p-6 rounded-xl mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-11 gap-4 items-center">
+        <!-- From -->
+        <div class="md:col-span-5 space-y-2">
+          <label class="text-xs font-semibold text-slate-400 block">From</label>
+          <input
+            type="number"
+            id="fromValue"
+            value="1"
+            class="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-lg text-cyan-300 font-mono focus:outline-none focus:border-cyan-500"
+          />
+          <select id="fromUnit" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none font-mono"></select>
+        </div>
+
+        <!-- Swap Icon -->
+        <div class="md:col-span-1 flex justify-center py-2 md:py-0">
+          <button onclick="swapUnits()" class="p-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-400 rounded-full transition shadow">
+            ⇄
+          </button>
+        </div>
+
+        <!-- To -->
+        <div class="md:col-span-5 space-y-2">
+          <label class="text-xs font-semibold text-slate-400 block">To</label>
+          <input
+            type="number"
+            id="toValue"
+            readonly
+            class="w-full p-3 bg-slate-900/50 border border-slate-800 rounded-lg text-lg text-emerald-400 font-mono focus:outline-none"
+          />
+          <select id="toUnit" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none font-mono"></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Formula Card -->
+    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between text-xs">
+      <span class="text-slate-500">Active Conversion Formula:</span>
+      <span id="formulaDisp" class="font-mono text-slate-300 font-semibold">1 unit = 1 unit</span>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Part of the StarSign16 Ecosystem. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">Main Hub</a></p>
+  </footer>
+
+  <script>
+    const UNITS = {
+      length: {
+        units: ['Meters (m)', 'Kilometers (km)', 'Centimeters (cm)', 'Millimeters (mm)', 'Inches (in)', 'Feet (ft)', 'Yards (yd)', 'Miles (mi)'],
+        factors: [1, 1000, 0.01, 0.001, 0.0254, 0.3048, 0.9144, 1609.344]
+      },
+      area: {
+        units: ['Square Meters (m²)', 'Pyung (평)', 'Square Kilometers (km²)', 'Square Feet (ft²)', 'Acres (ac)', 'Hectares (ha)'],
+        factors: [1, 3.305785, 1000000, 0.092903, 4046.856, 10000]
+      },
+      weight: {
+        units: ['Kilograms (kg)', 'Grams (g)', 'Pounds (lb)', 'Ounces (oz)', 'Metric Tons (t)'],
+        factors: [1, 0.001, 0.45359237, 0.0283495, 1000]
+      },
+      data: {
+        units: ['Megabytes (MB)', 'Gigabytes (GB)', 'Kilobytes (KB)', 'Terabytes (TB)', 'Bytes (B)'],
+        factors: [1, 1024, 0.0009765625, 1048576, 0.0000009536743]
+      },
+      temp: {
+        units: ['Celsius (°C)', 'Fahrenheit (°F)', 'Kelvin (K)'],
+        special: true
+      }
+    };
+
+    let currentCategory = 'length';
+
+    const fromValue = document.getElementById('fromValue');
+    const toValue = document.getElementById('toValue');
+    const fromUnit = document.getElementById('fromUnit');
+    const toUnit = document.getElementById('toUnit');
+    const formulaDisp = document.getElementById('formulaDisp');
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      Object.keys(UNITS).forEach(k => {
+        const btn = document.getElementById(`tab-${k}`);
+        if (k === cat) {
+          btn.className = 'px-4 py-2.5 text-xs font-bold border-b-2 border-cyan-500 text-cyan-400 transition whitespace-nowrap';
+        } else {
+          btn.className = 'px-4 py-2.5 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap';
+        }
+      });
+
+      populateSelects();
+      convert();
+    }
+
+    function populateSelects() {
+      const catData = UNITS[currentCategory];
+      fromUnit.innerHTML = '';
+      toUnit.innerHTML = '';
+
+      catData.units.forEach((u, i) => {
+        fromUnit.add(new Option(u, i));
+        toUnit.add(new Option(u, i));
+      });
+
+      fromUnit.selectedIndex = 0;
+      toUnit.selectedIndex = 1 < catData.units.length ? 1 : 0;
+    }
+
+    function convert() {
+      const val = parseFloat(fromValue.value);
+      if (isNaN(val)) {
+        toValue.value = '';
+        formulaDisp.innerText = '-';
+        return;
+      }
+
+      const fromIdx = fromUnit.selectedIndex;
+      const toIdx = toUnit.selectedIndex;
+      const catData = UNITS[currentCategory];
+
+      let res = 0;
+
+      if (currentCategory === 'temp') {
+        // Temperature logic
+        let c = val;
+        if (fromIdx === 1) c = (val - 32) * 5/9; // °F -> °C
+        if (fromIdx === 2) c = val - 273.15;    // K -> °C
+
+        if (toIdx === 0) res = c;
+        if (toIdx === 1) res = (c * 9/5) + 32;
+        if (toIdx === 2) res = c + 273.15;
+      } else {
+        // Standard Factor logic: (val * fromFactor) / toFactor
+        const base = val * catData.factors[fromIdx];
+        res = base / catData.factors[toIdx];
+      }
+
+      // Format precision
+      toValue.value = Number(res.toFixed(6));
+      formulaDisp.innerText = `1 ${catData.units[fromIdx].split(' ')[0]} ≈ ${(res / val || 1).toFixed(4)} ${catData.units[toIdx].split(' ')[0]}`;
+    }
+
+    function swapUnits() {
+      const temp = fromUnit.selectedIndex;
+      fromUnit.selectedIndex = toUnit.selectedIndex;
+      toUnit.selectedIndex = temp;
+      convert();
+    }
+
+    fromValue.addEventListener('input', convert);
+    fromUnit.addEventListener('change', convert);
+    toUnit.addEventListener('change', convert);
+
+    // Initial setup
+    setCategory('length');
+  </script>
+</body>
+</html>

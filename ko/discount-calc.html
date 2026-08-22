@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>할인율 · 부가세 · 마진율 계산기 - StarSign16 툴킷</title>
+  <meta name="description" content="세일 할인가, 부가세(VAT) 공급가액 분리, 원가 대비 마진율을 실시간 계산합니다. 100% 브라우저 연산.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition flex items-center gap-1">
+        <span>←</span> <span>StarSign16 툴킷 허브</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="../discount-calc.html" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">English</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">생활 & 비즈니스</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white">할인율 · 부가세 · 마진율 계산기</h1>
+      <p class="text-xs text-slate-400">쇼핑 할인 가격, 부가세 10% 분리/포함 계산, 원가 대비 판매 마진율을 즉시 산출합니다.</p>
+    </div>
+
+    <div class="flex gap-2 mb-6 border-b border-slate-800 pb-px overflow-x-auto">
+      <button onclick="switchTab('discount')" id="tabDiscountBtn" class="px-5 py-2.5 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 transition whitespace-nowrap">세일 & 할인율</button>
+      <button onclick="switchTab('vat')" id="tabVatBtn" class="px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap">부가세 (VAT)</button>
+      <button onclick="switchTab('margin')" id="tabMarginBtn" class="px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap">원가 & 마진율</button>
+    </div>
+
+    <!-- 1. Discount Workspace -->
+    <div id="discountWorkspace" class="space-y-6">
+      <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">원래 가격 (원)</label>
+          <input type="number" id="discOrigPrice" placeholder="예: 50000" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">할인율 (%)</label>
+          <input type="number" id="discRate" placeholder="예: 20" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-slate-950 border border-slate-800 p-6 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">최종 할인 결제 금액</span>
+          <span id="discFinalPrice" class="text-3xl sm:text-4xl font-extrabold font-mono text-cyan-400">0원</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-6 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">할인 절약 금액</span>
+          <span id="discSavedAmount" class="text-3xl sm:text-4xl font-extrabold font-mono text-emerald-400">0원</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. VAT Workspace -->
+    <div id="vatWorkspace" class="hidden space-y-6">
+      <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">기준 금액 (원)</label>
+            <input type="number" id="vatAmount" placeholder="예: 110000" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">세율 (%)</label>
+            <input type="number" id="vatRate" value="10" placeholder="예: 10" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+          </div>
+        </div>
+
+        <div class="flex gap-4 pt-2 border-t border-slate-800/80 text-xs">
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+            <input type="radio" name="vatType" value="exclude" checked class="text-cyan-500 focus:ring-0" />
+            <span>부가세 별도 (공급가액 ➔ 합계)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+            <input type="radio" name="vatType" value="include" class="text-cyan-500 focus:ring-0" />
+            <span>부가세 포함 (합계 ➔ 공급가액 분리)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">공급가액</span>
+          <span id="vatNetDisp" class="text-2xl font-bold font-mono text-slate-300">0원</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">부가세액 (10%)</span>
+          <span id="vatTaxDisp" class="text-2xl font-bold font-mono text-indigo-400">0원</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">합계 (총 금액)</span>
+          <span id="vatGrossDisp" class="text-2xl font-bold font-mono text-cyan-400">0원</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Margin Workspace -->
+    <div id="marginWorkspace" class="hidden space-y-6">
+      <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">원가 (매입 비용, 원)</label>
+          <input type="number" id="marginCost" placeholder="예: 60000" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">판매가 (매출액, 원)</label>
+          <input type="number" id="marginRevenue" placeholder="예: 100000" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">매출 순이익</span>
+          <span id="marginProfitDisp" class="text-2xl font-bold font-mono text-emerald-400">0원</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">마진율 (Profit Margin)</span>
+          <span id="marginRateDisp" class="text-2xl font-bold font-mono text-cyan-400">0.0%</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl text-center">
+          <span class="text-xs text-slate-500 block mb-1">원가 대비 마크업 비율</span>
+          <span id="marginMarkupDisp" class="text-2xl font-bold font-mono text-indigo-400">0.0%</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>StarSign16 생태계. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">메인 허브</a></p>
+  </footer>
+
+  <script>
+    const tabs = ['discount', 'vat', 'margin'];
+
+    function switchTab(target) {
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab${capitalize(t)}Btn`);
+        const ws = document.getElementById(`${t}Workspace`);
+        if (t === target) {
+          btn.className = 'px-5 py-2.5 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 transition whitespace-nowrap';
+          ws.classList.remove('hidden');
+        } else {
+          btn.className = 'px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap';
+          ws.classList.add('hidden');
+        }
+      });
+    }
+
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    const discOrigPrice = document.getElementById('discOrigPrice');
+    const discRate = document.getElementById('discRate');
+    const discFinalPrice = document.getElementById('discFinalPrice');
+    const discSavedAmount = document.getElementById('discSavedAmount');
+
+    function calcDiscount() {
+      const orig = parseFloat(discOrigPrice.value) || 0;
+      const rate = parseFloat(discRate.value) || 0;
+      const saved = (orig * rate) / 100;
+      const finalPrice = Math.max(0, orig - saved);
+
+      discFinalPrice.innerText = `${Math.round(finalPrice).toLocaleString()}원`;
+      discSavedAmount.innerText = `${Math.round(saved).toLocaleString()}원`;
+    }
+
+    discOrigPrice.addEventListener('input', calcDiscount);
+    discRate.addEventListener('input', calcDiscount);
+
+    const vatAmount = document.getElementById('vatAmount');
+    const vatRate = document.getElementById('vatRate');
+    const vatNetDisp = document.getElementById('vatNetDisp');
+    const vatTaxDisp = document.getElementById('vatTaxDisp');
+    const vatGrossDisp = document.getElementById('vatGrossDisp');
+    const vatRadios = document.getElementsByName('vatType');
+
+    function calcVat() {
+      const amt = parseFloat(vatAmount.value) || 0;
+      const rate = parseFloat(vatRate.value) || 0;
+      let isExclude = true;
+
+      for (const r of vatRadios) {
+        if (r.checked && r.value === 'include') isExclude = false;
+      }
+
+      let net = 0, tax = 0, gross = 0;
+
+      if (isExclude) {
+        net = amt;
+        tax = (amt * rate) / 100;
+        gross = net + tax;
+      } else {
+        gross = amt;
+        net = gross / (1 + (rate / 100));
+        tax = gross - net;
+      }
+
+      vatNetDisp.innerText = `${Math.round(net).toLocaleString()}원`;
+      vatTaxDisp.innerText = `${Math.round(tax).toLocaleString()}원`;
+      vatGrossDisp.innerText = `${Math.round(gross).toLocaleString()}원`;
+    }
+
+    vatAmount.addEventListener('input', calcVat);
+    vatRate.addEventListener('input', calcVat);
+    vatRadios.forEach(r => r.addEventListener('change', calcVat));
+
+    const marginCost = document.getElementById('marginCost');
+    const marginRevenue = document.getElementById('marginRevenue');
+    const marginProfitDisp = document.getElementById('marginProfitDisp');
+    const marginRateDisp = document.getElementById('marginRateDisp');
+    const marginMarkupDisp = document.getElementById('marginMarkupDisp');
+
+    function calcMargin() {
+      const cost = parseFloat(marginCost.value) || 0;
+      const rev = parseFloat(marginRevenue.value) || 0;
+      const profit = rev - cost;
+
+      const marginPct = rev > 0 ? (profit / rev) * 100 : 0;
+      const markupPct = cost > 0 ? (profit / cost) * 100 : 0;
+
+      marginProfitDisp.innerText = `${Math.round(profit).toLocaleString()}원`;
+      marginRateDisp.innerText = `${marginPct.toFixed(1)}%`;
+      marginMarkupDisp.innerText = `${markupPct.toFixed(1)}%`;
+    }
+
+    marginCost.addEventListener('input', calcMargin);
+    marginRevenue.addEventListener('input', calcMargin);
+
+    discOrigPrice.value = 50000;
+    discRate.value = 20;
+    calcDiscount();
+
+    vatAmount.value = 100000;
+    calcVat();
+
+    marginCost.value = 60000;
+    marginRevenue.value = 100000;
+    calcMargin();
+  </script>
+</body>
+</html>
