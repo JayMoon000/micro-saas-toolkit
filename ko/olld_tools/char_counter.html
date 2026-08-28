@@ -1,44 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>실시간 한/영 글자수 및 단어수 분석기 - StarSign16 Toolkit</title>
+  <meta name="description" content="공백 포함/제외 한글 글자수, 영문 단어수, 바이트(Byte), 원고지 매수를 0.1초 만에 정밀 측정합니다.">
+  <link rel="canonical" href="https://tool.starsign16.com/ko/olld_tools/char_counter">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="실시간 한/영 글자수 및 단어수 분석기 - StarSign16 Toolkit">
+  <meta property="og:description" content="공백 포함/제외 한글 글자수, 영문 단어수, 바이트(Byte), 원고지 매수를 0.1초 만에 정밀 측정합니다.">
+  <meta property="og:url" content="https://tool.starsign16.com/ko/olld_tools/char_counter">
+  <meta property="og:image" content="https://tool.starsign16.com/og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Preconnect & CDNs -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 한/영 글자수 및 단어수 분석기 - StarSign16 Toolkit</title>
-    <meta name="description" content="공백 포함/제외 한글 글자수, 영문 단어수, 바이트(Byte), 원고지 매수를 0.1초 만에 정밀 측정합니다.">
-    <meta name="keywords" content="글자수 세기, 자소서 글자수, 단어수 측정, 바이트 계산기, 원고지 분량 계산">
-    <meta name="author" content="StarSign16">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://tool.starsign16.com/ko/olld_tools/char_counter.html">
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tool.starsign16.com/char_counter.html">
-    <meta property="og:title" content="실시간 글자수 & 단어수 분석기 - StarSign16">
-    <meta property="og:description" content="공백 포함/제외 글자수, 영문 단어수, 원고지 매수 실시간 분석.">
-    <meta property="og:image" content="https://tool.starsign16.com/og-image.jpg">
-
-    <!-- Favicon & Analytics -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="alternate icon" type="image/png" href="favicon.png">
-    <script src="analytics.js" defer></script>
-	
-    <script src="https://cdn.tailwindcss.com"></script defer>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-    </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6LFL2P1WRN"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6LFL2P1WRN');
-</script>
+  <!-- Google tag (gtag.js) - Single Instance -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LFL2P1WRN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6LFL2P1WRN');
+  </script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-rose-500 selection:text-white">
 
