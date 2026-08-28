@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1초 전자책(EPUB) 변환기 - StarSign16 Toolkit</title>
@@ -8,7 +10,7 @@
     <meta name="keywords" content="EPUB 변환기, 전자책 만들기, PDF to EPUB, DOCX to EPUB, 무료 전자책 변환">
     <meta name="author" content="StarSign16">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://tool.starsign16.com/epub_maker.html">
+    <link rel="canonical" href="https://tool.starsign16.com/ko/olld_tools/epub_maker.html">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -69,11 +71,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-400 mb-1">도서 제목</label>
-                    <input type="text" id="bookTitle" value="나의 첫 번째 전자책" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 outline-none focus:border-sky-500 transition">
+                    <input type="text" id="bookTitle" value="나의 첫 번째 전자책" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 outline-none focus:border-sky-500 transition" aria-label="Input field">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-400 mb-1">저자 이름</label>
-                    <input type="text" id="bookAuthor" value="Jay" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 outline-none focus:border-sky-500 transition">
+                    <input type="text" id="bookAuthor" value="Jay" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 outline-none focus:border-sky-500 transition" aria-label="Input field">
                 </div>
             </div>
 
@@ -194,6 +196,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
 <head>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
  <title>${escapeXml(title)}</title>
  <style>
  body { font-family: sans-serif; line-height: 1.8; padding: 5%; color: #111; }

@@ -1,0 +1,20 @@
+# StarSign16 Micro Toolkit
+> 100% Free, Client-Side Browser Utilities (Zero Server Cost & Zero Data Collection)
+
+URL: https://tool.starsign16.com
+
+## Core Philosophy
+- All tools run 100% client-side in the user's browser.
+- No signup, no limits, no watermarks, no server-side data storage.
+
+## Available Tools
+- https://tool.starsign16.com/ko/background-remover : AI Image Background Remover
+- https://tool.starsign16.com/ko/markdown-previewer : Real-time Markdown Editor & Previewer
+- https://tool.starsign16.com/ko/qr-generator : Clean QR Code Generator & Downloader
+- https://tool.starsign16.com/ko/image-resizer : Client-Side Image Resizer & Converter
+- https://tool.starsign16.com/ko/regex-tester : Real-time Regular Expression Tester & Explainer
+- https://tool.starsign16.com/ko/base64-tool : Base64 Encoder / Decoder
+- https://tool.starsign16.com/ko/epub-converter : 1-sec Client-side EPUB Ebook Converter
+- https://tool.starsign16.com/ko/word-counter : Real-time Korean/English Word Counter
+- https://tool.starsign16.com/ko/chart-generator : 3-sec Pastel Chart Visualizer
+- https://tool.starsign16.com/ko/calendar-maker : Natural Language Calendar Event Generator

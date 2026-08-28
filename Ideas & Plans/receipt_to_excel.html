@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3초 AI 영수증 엑셀 변환기 - StarSign Toolkit</title>
@@ -11,6 +13,8 @@
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
     </style>
+  <link rel="canonical" href="https://tool.starsign16.com/Ideas & Plans/receipt_to_excel.html">
+  <meta property="og:image" content="https://tool.starsign16.com/og-image.jpg">
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
 
@@ -210,9 +214,9 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/80 transition";
                 tr.innerHTML = `
-                    <td class="py-2.5 px-3"><input type="text" value="${row.date}" onchange="updateData(${index}, 'date', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none"></td>
-                    <td class="py-2.5 px-3"><input type="text" value="${row.store}" onchange="updateData(${index}, 'store', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none font-semibold text-slate-900"></td>
-                    <td class="py-2.5 px-3"><input type="text" value="${row.item}" onchange="updateData(${index}, 'item', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none"></td>
+                    <td class="py-2.5 px-3"><input type="text" value="${row.date}" onchange="updateData(${index}, 'date', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none" aria-label="Input field"></td>
+                    <td class="py-2.5 px-3"><input type="text" value="${row.store}" onchange="updateData(${index}, 'store', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none font-semibold text-slate-900" aria-label="Input field"></td>
+                    <td class="py-2.5 px-3"><input type="text" value="${row.item}" onchange="updateData(${index}, 'item', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none" aria-label="Input field"></td>
                     <td class="py-2.5 px-3 text-right"><input type="number" value="${row.amount}" onchange="updateData(${index}, 'amount', this.value)" class="w-full text-right bg-transparent border-b border-transparent focus:border-indigo-500 outline-none font-semibold text-indigo-600"></td>
                     <td class="py-2.5 px-3">
                         <select onchange="updateData(${index}, 'method', this.value)" class="bg-transparent border-b border-transparent focus:border-indigo-500 outline-none text-slate-700">

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>노코드 플로우차트 메이커 - StarSign16 Toolkit</title>
@@ -8,7 +10,7 @@
     <meta name="keywords" content="노코드 플로우차트, 순서도 만들기, 다이어그램 그리기, Mermaid, 프로세스 맵">
     <meta name="author" content="StarSign16">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://tool.starsign16.com/flowchart_maker.html">
+    <link rel="canonical" href="https://tool.starsign16.com/ko/olld_tools/flowchart_maker.html">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -146,11 +148,11 @@
                         </div>
                         <div>
                             <label class="block text-[11px] font-medium text-slate-400 mb-1">단계 이름</label>
-                            <input type="text" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-indigo-500" placeholder="예: 사용자 접속" value="${b.text}" oninput="updateBlock(${idx}, 'text', this.value)">
+                            <input type="text" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-indigo-500" placeholder="예: 사용자 접속" value="${b.text}" oninput="updateBlock(${idx}, 'text', this.value)" aria-label="Input field">
                         </div>
                         <div class="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700/60">
                             <label class="block text-[10px] text-slate-400 mb-1">⬇️ 다음 연결 (비워두면 아래 단계 자동 연결)</label>
-                            <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-200 outline-none focus:border-indigo-500" placeholder="특정 단계로 점프 시 이름 입력" value="${b.next || ''}" oninput="updateBlock(${idx}, 'next', this.value)">
+                            <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-200 outline-none focus:border-indigo-500" placeholder="특정 단계로 점프 시 이름 입력" value="${b.next || ''}" oninput="updateBlock(${idx}, 'next', this.value)" aria-label="Input field">
                         </div>
                     `;
                 } else {
@@ -161,16 +163,16 @@
                         </div>
                         <div>
                             <label class="block text-[11px] font-medium text-slate-400 mb-1">조건 질문</label>
-                            <input type="text" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-amber-500" placeholder="예: 로그인 확인?" value="${b.text}" oninput="updateBlock(${idx}, 'text', this.value)">
+                            <input type="text" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-amber-500" placeholder="예: 로그인 확인?" value="${b.text}" oninput="updateBlock(${idx}, 'text', this.value)" aria-label="Input field">
                         </div>
                         <div class="grid grid-cols-2 gap-2 bg-slate-800/80 p-2.5 rounded-lg border border-slate-700/60">
                             <div>
                                 <label class="block text-[10px] text-emerald-400 font-bold mb-1">🟢 예 (Yes)</label>
-                                <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-emerald-500" placeholder="이동할 단계명" value="${b.yesText || ''}" oninput="updateBlock(${idx}, 'yesText', this.value)">
+                                <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-emerald-500" placeholder="이동할 단계명" value="${b.yesText || ''}" oninput="updateBlock(${idx}, 'yesText', this.value)" aria-label="Input field">
                             </div>
                             <div>
                                 <label class="block text-[10px] text-rose-400 font-bold mb-1">🔴 아니오 (No)</label>
-                                <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-rose-500" placeholder="이동할 단계명" value="${b.noText || ''}" oninput="updateBlock(${idx}, 'noText', this.value)">
+                                <input type="text" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200 outline-none focus:border-rose-500" placeholder="이동할 단계명" value="${b.noText || ''}" oninput="updateBlock(${idx}, 'noText', this.value)" aria-label="Input field">
                             </div>
                         </div>
                     `;
