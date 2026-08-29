@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StarSign16 Toolkit - Free Web Utilities</title>
-  <meta name="description" content="Fast, 100% client-side privacy-first web utilities with no logins.">
+  <title>AI Background Remover - StarSign16 Toolkit</title>
+  <meta name="description" content="100% on-device AI background remover. Free client-side image cutout tool.">
   <link rel="canonical" href="https://tool.starsign16.com/background-remover">
   
-  <meta property="og:title" content="StarSign16 Toolkit - Free Web Utilities">
-  <meta property="og:description" content="Fast, 100% client-side privacy-first web utilities with no logins.">
+  <meta property="og:title" content="AI Background Remover - StarSign16 Toolkit">
+  <meta property="og:description" content="100% on-device AI background remover. Free client-side image cutout tool.">
   <meta property="og:url" content="https://tool.starsign16.com/background-remover">
   <meta property="og:image" content="https://tool.starsign16.com/og-image.jpg">
   <meta property="og:type" content="website">
@@ -17,8 +17,8 @@
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google tag (gtag.js) -->
+  
+  <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LFL2P1WRN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -27,165 +27,194 @@
     gtag('config', 'G-6LFL2P1WRN');
   </script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
-
-  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-white">
+  
+  <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-40">
     <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-      <a href="/" class="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition">← StarSign16 Toolkit Hub</a>
-      <div class="flex items-center gap-3">
-        <a href="/ko/background-remover" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 border border-slate-700 rounded hover:bg-slate-700 text-cyan-400">Korean</a>
-      </div>
+      <a href="/" class="text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+        &larr; StarSign16 Toolkit Hub
+      </a>
+      <a href="/ko/background-remover" class="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">
+        한국어
+      </a>
     </div>
   </header>
 
-  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
-    <div class="mb-6">
-      <div class="flex items-center gap-2 mb-1">
-        <span class="text-xs font-medium px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Image & Media</span>
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full flex flex-col items-center">
+    <div class="text-center mb-8">
+      <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/60 text-cyan-400">Image & Media</span>
+      <h1 class="text-2xl sm:text-3xl font-bold mt-2 text-slate-100">AI Background Remover</h1>
+      <p class="text-sm text-slate-400 mt-1">Universal high-precision background removal. 100% on-device client processing.</p>
+    </div>
+
+    <!-- Drop Zone -->
+    <label for="fileInput" id="dropZone" class="w-full max-w-2xl border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-slate-900/40 hover:bg-slate-900/70 rounded-2xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center min-h-[220px]">
+      <input type="file" id="fileInput" class="hidden" accept="image/png, image/jpeg, image/webp" aria-label="Select image file">
+      <div class="w-12 h-12 rounded-full bg-slate-800/80 flex items-center justify-center text-cyan-400 mb-3 border border-slate-700 pointer-events-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
       </div>
-      <h1 class="text-2xl font-bold text-white">AI Background Remover</h1>
-      <p class="text-xs text-slate-400">Universal high-precision background removal. 100% on-device client processing.</p>
-    </div>
+      <p class="text-sm font-medium text-slate-200 pointer-events-none">Click or drag & drop an image here</p>
+      <p class="text-xs text-slate-500 mt-1 pointer-events-none">Supports PNG, JPG, WEBP (No server upload, 100% Free)</p>
+    </label>
 
-    <div
-      id="dropZone"
-      onclick="document.getElementById('fileInput').click()"
-      class="border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-slate-950/60 rounded-xl p-8 text-center cursor-pointer transition mb-6"
-    >
-      <input type="file" id="fileInput" accept="image/*" class="hidden" />
-      <div class="text-3xl mb-2">✂️</div>
-      <p class="text-sm font-semibold text-slate-200 mb-1">Click or drag & drop an image to cut out</p>
-      <p class="text-xs text-slate-500">Supports full-body portraits, objects, and animals (Zero server uploads)</p>
-    </div>
-
-    <div id="loadingState" class="hidden bg-slate-950 border border-slate-800 p-8 rounded-xl text-center mb-6">
-      <div class="inline-block animate-spin text-2xl mb-3">⚙️</div>
-      <p class="text-sm font-semibold text-cyan-400 mb-1" id="loadingText">Initializing AI model...</p>
-      <p class="text-xs text-slate-500">First run caches ~25MB model into browser memory for instant future runs.</p>
-    </div>
-
-    <div id="workspace" class="hidden space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col items-center">
-          <span class="text-xs font-semibold text-slate-400 mb-3 self-start">Original Image</span>
-          <div class="w-full h-64 flex items-center justify-center bg-slate-900/50 rounded-lg overflow-hidden p-2">
-            <img id="origImg" class="max-h-full max-w-full object-contain rounded" alt="Original" />
+    <!-- Preview & Result Area -->
+    <div id="resultArea" class="w-full max-w-2xl mt-6 hidden flex-col items-center">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-6">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex flex-col items-center">
+          <span class="text-xs text-slate-400 mb-2">Original Image</span>
+          <div class="w-full h-48 flex items-center justify-center overflow-hidden rounded-lg bg-slate-950">
+            <img id="origImg" class="max-h-full max-w-full object-contain" alt="Original">
           </div>
         </div>
-
-        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col items-center">
-          <span class="text-xs font-semibold text-cyan-400 mb-3 self-start">Cutout (Transparent PNG)</span>
-          <div class="w-full h-64 flex items-center justify-center checkerboard rounded-lg overflow-hidden p-2">
-            <img id="resultImg" class="max-h-full max-w-full object-contain" alt="Cutout" />
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex flex-col items-center">
+          <span class="text-xs text-cyan-400 mb-2">Removed Background</span>
+          <div class="w-full h-48 flex items-center justify-center overflow-hidden rounded-lg bg-[repeating-conic-gradient(#1e293b_0%_25%,#0f172a_0%_50%)] bg-[length:16px_16px]">
+            <img id="resultImg" class="max-h-full max-w-full object-contain" alt="Result">
           </div>
         </div>
       </div>
-
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <button onclick="resetWorkspace()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition">
-          Process Another Image
-        </button>
-        <a id="downloadBtn" download="starsign16-cutout.png" class="px-8 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold text-center transition">
+      <div class="flex gap-3">
+        <button type="button" id="downloadBtn" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-cyan-950 transition-all flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
           Download Transparent PNG
-        </a>
+        </button>
+        <button type="button" id="resetBtn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-xl transition-all">
+          Upload Another
+        </button>
       </div>
     </div>
   </main>
 
-  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-    <p>Part of the StarSign16 Ecosystem. <a href="https://starsign16.com" class="text-slate-400 hover:text-cyan-400 underline">Main Hub</a></p>
-  </footer>
+  <!-- Interactive Loading Overlay -->
+  <div id="loadingOverlay" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex flex-col items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl flex flex-col items-center">
+      <div class="w-14 h-14 border-4 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin mb-4"></div>
+      <h3 id="loadingStatusText" class="text-base font-semibold text-slate-100 mb-1">Loading AI model into memory...</h3>
+      <p id="loadingSubText" class="text-xs text-slate-400 mb-4">Performing high-precision cutout directly in your browser memory.</p>
+      <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-3">
+        <div id="progressBar" class="bg-gradient-to-r from-cyan-500 to-indigo-500 h-full w-1/4 transition-all duration-500"></div>
+      </div>
+      <span class="text-[11px] text-slate-500">🔒 100% On-device Processing (No Server Upload)</span>
+    </div>
+  </div>
 
   <script type="module">
-    import { AutoModel, AutoProcessor, RawImage, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
-    
-    env.allowLocalModels = false;
-    env.backends.onnx.wasm.numThreads = 1;
-
-    let model = null;
-    let processor = null;
+    import removeBackground from 'https://esm.sh/@imgly/background-removal@1.4.5?bundle';
 
     const fileInput = document.getElementById('fileInput');
     const dropZone = document.getElementById('dropZone');
-    const loadingState = document.getElementById('loadingState');
-    const loadingText = document.getElementById('loadingText');
-    const workspace = document.getElementById('workspace');
+    const resultArea = document.getElementById('resultArea');
     const origImg = document.getElementById('origImg');
     const resultImg = document.getElementById('resultImg');
     const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingStatusText = document.getElementById('loadingStatusText');
+    const progressBar = document.getElementById('progressBar');
 
-    window.resetWorkspace = function() {
-      fileInput.value = '';
-      workspace.classList.add('hidden');
-      loadingState.classList.add('hidden');
-      dropZone.classList.remove('hidden');
-    };
+    const stages = [
+      { text: "Loading AI model into memory...", progress: "25%" },
+      { text: "Analyzing subject contours...", progress: "50%" },
+      { text: "Refining alpha transparency pixels...", progress: "75%" },
+      { text: "Rendering transparent output...", progress: "92%" }
+    ];
+    let stageIndex = 0;
+    let stageTimer = null;
 
-    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-cyan-500'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-cyan-500'));
+    function startProgress() {
+      loadingOverlay.classList.remove('hidden');
+      stageIndex = 0;
+      loadingStatusText.innerText = stages[0].text;
+      progressBar.style.width = stages[0].progress;
+
+      stageTimer = setInterval(() => {
+        if (stageIndex < stages.length - 1) {
+          stageIndex++;
+          loadingStatusText.innerText = stages[stageIndex].text;
+          progressBar.style.width = stages[stageIndex].progress;
+        } else {
+          clearInterval(stageTimer);
+        }
+      }, 6000);
+    }
+
+    function finishProgress() {
+      if (stageTimer) clearInterval(stageTimer);
+      progressBar.style.width = "100%";
+      setTimeout(() => {
+        loadingOverlay.classList.add('hidden');
+      }, 300);
+    }
+
+    window.addEventListener('dragover', (e) => e.preventDefault(), false);
+    window.addEventListener('drop', (e) => e.preventDefault(), false);
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-cyan-500', 'bg-slate-900/70');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-cyan-500', 'bg-slate-900/70');
+    });
+
     dropZone.addEventListener('drop', (e) => {
       e.preventDefault();
-      dropZone.classList.remove('border-cyan-500');
-      if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
+      dropZone.classList.remove('border-cyan-500', 'bg-slate-900/70');
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleImage(e.dataTransfer.files[0]);
+      }
     });
 
     fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length) processFile(e.target.files[0]);
+      if (e.target.files && e.target.files.length > 0) {
+        handleImage(e.target.files[0]);
+      }
     });
 
-    async function processFile(file) {
-      if (!file.type.startsWith('image/')) return alert('Please upload a valid image file.');
+    let currentBlobUrl = null;
 
-      const imgUrl = URL.createObjectURL(file);
-      origImg.src = imgUrl;
-      dropZone.classList.add('hidden');
-      workspace.classList.add('hidden');
-      loadingState.classList.remove('hidden');
+    async function handleImage(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      origImg.src = URL.createObjectURL(file);
+      startProgress();
 
       try {
-        if (!model || !processor) {
-          loadingText.innerText = 'Loading RMBG High-Precision AI Model...';
-          const model_id = 'briaai/RMBG-1.4';
-          model = await AutoModel.from_pretrained(model_id, { quantized: true });
-          processor = await AutoProcessor.from_pretrained(model_id);
-        }
+        const imageBlob = await removeBackground(file);
 
-        loadingText.innerText = 'Extracting full-body & background...';
+        if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+        currentBlobUrl = URL.createObjectURL(imageBlob);
+        resultImg.src = currentBlobUrl;
 
-        const image = await RawImage.fromURL(imgUrl);
-        const { pixel_values } = await processor(image);
-
-        const { output } = await model({ input: pixel_values });
-        const mask = await RawImage.fromTensor(output[0].mul(255).to('uint8')).resize(image.width, image.height);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = image.width;
-        canvas.height = image.height;
-        const ctx = canvas.getContext('2d');
-
-        const rawCanvas = image.toCanvas();
-        ctx.drawImage(rawCanvas, 0, 0);
-
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const maskData = mask.data;
-
-        for (let i = 0; i < maskData.length; i++) {
-          imgData.data[4 * i + 3] = maskData[i];
-        }
-        ctx.putImageData(imgData, 0, 0);
-
-        const outUrl = canvas.toDataURL('image/png');
-        resultImg.src = outUrl;
-        downloadBtn.href = outUrl;
-
-        loadingState.classList.add('hidden');
-        workspace.classList.remove('hidden');
+        dropZone.classList.add('hidden');
+        resultArea.classList.remove('hidden');
+        resultArea.classList.add('flex');
       } catch (err) {
-        console.error(err);
-        alert('Failed to process image locally. Please try a standard PNG/JPG.');
-        window.resetWorkspace();
+        console.error('Background removal error:', err);
+        alert('Failed to remove background: ' + (err.message || 'Processing error.'));
+      } finally {
+        finishProgress();
       }
     }
+
+    downloadBtn.addEventListener('click', () => {
+      if (!currentBlobUrl) return;
+      const a = document.createElement('a');
+      a.href = currentBlobUrl;
+      a.download = `starsign16-nobg-${Date.now()}.png`;
+      a.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      fileInput.value = '';
+      resultArea.classList.add('hidden');
+      resultArea.classList.remove('flex');
+      dropZone.classList.remove('hidden');
+    });
   </script>
 </body>
 </html>
