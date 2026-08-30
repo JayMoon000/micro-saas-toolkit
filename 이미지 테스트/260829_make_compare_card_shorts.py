@@ -1,0 +1,87 @@
+import os
+
+SAVE_DIR = r"D:\Gemini_Files\Micro_SaaS_Toolkit"
+FILE_NAME = "compare_card_shorts.html"
+
+HTML_CONTENT = """<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>누끼 툴 비교 카드 - StarSign16</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-4 font-sans selection:bg-cyan-500">
+
+  <!-- 9:16 Shorts/Reels 비교 카드 (1080x1920 비율 최적화) -->
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col items-center">
+    
+    <!-- 뱃지 & 헤더 -->
+    <span class="text-xs font-bold px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/80 text-cyan-400 mb-3 tracking-wide">
+      AI 누끼 툴 팩트 체크
+    </span>
+    <h2 class="text-xl font-bold text-center text-slate-100 leading-snug mb-1">
+      아직도 유료 결제하고 누끼 따시나요?
+    </h2>
+    <p class="text-xs text-slate-400 text-center mb-6">스마트스토어 / 디자이너 / 마케터 필수 비교</p>
+
+    <!-- 비교 테이블 카드 -->
+    <div class="w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/60 mb-6">
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr class="border-b border-slate-800 bg-slate-900/90 text-slate-400 font-semibold">
+            <th class="py-3 px-3">비교 항목</th>
+            <th class="py-3 px-2 text-center text-slate-400">기존 유명 툴<br><span class="text-[10px] font-normal text-slate-500">(R사 / P사 / C사)</span></th>
+            <th class="py-3 px-3 text-center text-cyan-400 font-bold bg-cyan-950/40">StarSign16<br><span class="text-[10px] font-normal text-cyan-300">(온디바이스)</span></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800/60">
+          <tr>
+            <td class="py-3 px-3 font-medium text-slate-300">상업적 이용</td>
+            <td class="py-3 px-2 text-center text-rose-400 font-medium">유료 플랜 필수<br><span class="text-[10px] text-slate-500">(월 1~3만 원)</span></td>
+            <td class="py-3 px-3 text-center text-emerald-400 font-bold bg-cyan-950/20">100% 무료<br><span class="text-[10px] text-emerald-300">(제한 없음)</span></td>
+          </tr>
+          <tr>
+            <td class="py-3 px-3 font-medium text-slate-300">다운로드 화질</td>
+            <td class="py-3 px-2 text-center text-amber-400">저해상도 미리보기<br><span class="text-[10px] text-slate-500">(HD는 결제)</span></td>
+            <td class="py-3 px-3 text-center text-cyan-300 font-bold bg-cyan-950/20">원본 초고화질<br><span class="text-[10px] text-cyan-400">(무손실 PNG)</span></td>
+          </tr>
+          <tr>
+            <td class="py-3 px-3 font-medium text-slate-300">회원가입 / 인증</td>
+            <td class="py-3 px-2 text-center text-slate-400">필수 (장수 제한)</td>
+            <td class="py-3 px-3 text-center text-emerald-400 font-bold bg-cyan-950/20">가입 0초<br><span class="text-[10px] text-emerald-300">(로그인 NO)</span></td>
+          </tr>
+          <tr>
+            <td class="py-3 px-3 font-medium text-slate-300">사진 데이터 보안</td>
+            <td class="py-3 px-2 text-center text-slate-400">외부 서버 전송</td>
+            <td class="py-3 px-3 text-center text-cyan-300 font-bold bg-cyan-950/20">내 컴퓨터 100%<br><span class="text-[10px] text-cyan-400">(서버 전송 ZERO)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 하단 핵심 포인트 강조 -->
+    <div class="w-full bg-cyan-950/40 border border-cyan-800/40 rounded-xl p-3 text-center">
+      <p class="text-xs font-bold text-cyan-300">
+        💡 워터마크 없음 • 설치 없음 • 완전 무료
+      </p>
+      <p class="text-[11px] text-slate-400 mt-0.5">
+        👉 tool.starsign16.com/ko/background-remover
+      </p>
+    </div>
+
+  </div>
+
+</body>
+</html>
+"""
+
+def run():
+    os.makedirs(SAVE_DIR, exist_ok=True)
+    file_path = os.path.join(SAVE_DIR, FILE_NAME)
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(HTML_CONTENT.strip())
+    print(f"✅ Generated Compare Card HTML: {file_path}")
+
+if __name__ == "__main__":
+    run()

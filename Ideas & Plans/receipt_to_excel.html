@@ -18,14 +18,6 @@
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LFL2P1WRN"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-6LFL2P1WRN');
-  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
 
@@ -53,7 +45,7 @@
             
             <!-- Upload Box -->
             <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-indigo-400 bg-white rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center min-h-[160px]">
-                <input type="file" id="image-input" accept="image/*" class="hidden">
+                <input type="file" id="image-input" accept="image/*" class="hidden" aria-label="도구 검색 및 입력">
                 <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl mb-2">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                 </div>
@@ -228,7 +220,7 @@
                     <td class="py-2.5 px-3"><input type="text" value="${row.date}" onchange="updateData(${index}, 'date', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none" aria-label="Input field"></td>
                     <td class="py-2.5 px-3"><input type="text" value="${row.store}" onchange="updateData(${index}, 'store', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none font-semibold text-slate-900" aria-label="Input field"></td>
                     <td class="py-2.5 px-3"><input type="text" value="${row.item}" onchange="updateData(${index}, 'item', this.value)" class="w-full bg-transparent border-b border-transparent focus:border-indigo-500 outline-none" aria-label="Input field"></td>
-                    <td class="py-2.5 px-3 text-right"><input type="number" value="${row.amount}" onchange="updateData(${index}, 'amount', this.value)" class="w-full text-right bg-transparent border-b border-transparent focus:border-indigo-500 outline-none font-semibold text-indigo-600"></td>
+                    <td class="py-2.5 px-3 text-right"><input type="number" value="${row.amount}" onchange="updateData(${index}, 'amount', this.value)" class="w-full text-right bg-transparent border-b border-transparent focus:border-indigo-500 outline-none font-semibold text-indigo-600" aria-label="도구 검색 및 입력"></td>
                     <td class="py-2.5 px-3">
                         <select onchange="updateData(${index}, 'method', this.value)" class="bg-transparent border-b border-transparent focus:border-indigo-500 outline-none text-slate-700">
                             <option value="신용카드" ${row.method === '신용카드' ? 'selected' : ''}>신용카드</option>
