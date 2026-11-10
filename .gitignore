@@ -1,0 +1,41 @@
+# ==========================================
+# 1. Environment & Secrets (보안)
+# ==========================================
+.env*
+!.env.example
+*.token
+*.key
+secrets/
+
+# ==========================================
+# 2. Local Planning & Marketing Assets (기획/로컬 폴더)
+# ==========================================
+History/
+"Ideas & Plans/"
+"instagram card news/"
+"이미지 테스트/"
+진행상황/
+"프로젝트 룰/"
+*.docx
+*.pptx
+*.xlsx
+
+# ==========================================
+# 3. Web Bundler & Vercel
+# ==========================================
+node_modules/
+dist/
+.vercel/
+*.log
+
+# ==========================================
+# 4. OS & IDE System Files
+# ==========================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.bak
+*~
