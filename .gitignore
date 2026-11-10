@@ -11,11 +11,11 @@ secrets/
 # 2. Local Planning & Marketing Assets (기획/로컬 폴더)
 # ==========================================
 History/
-"Ideas & Plans/"
-"instagram card news/"
-"이미지 테스트/"
+Ideas & Plans/
+instagram card news/
+이미지 테스트/
 진행상황/
-"프로젝트 룰/"
+프로젝트 룰/
 *.docx
 *.pptx
 *.xlsx
